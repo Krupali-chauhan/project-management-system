@@ -1,121 +1,97 @@
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+
+import SuperadminSidebar from "../../components/layout/SuperadminSidebar";
+
+import { Card, CardContent, Typography, Grid } from "@mui/material";
+import PeopleIcon from "@mui/icons-material/People";
+import WorkIcon from "@mui/icons-material/Work";
+import CodeIcon from "@mui/icons-material/Code";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+
+import axios from "axios";
 
 function SuperAdminDashboard() {
 
-  const navigate = useNavigate();
+  const [counts, setCounts] = useState({
+    users: 0,
+    managers: 0,
+    developers: 0,
+    projects: 0
+  });
 
-  const layout = {
-    display: "flex",
-    height: "100vh",
-    fontFamily: "Arial"
-  };
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/admin/dashboard-count")
+      .then(res => {
+        setCounts(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
-  const sidebar = {
-    width: "220px",
-    background: "#1e293b",
-    color: "white",
-    padding: "20px"
-  };
-
-  const menuItem = {
-    margin: "15px 0",
-    cursor: "pointer"
-  };
-
-  const main = {
-    flex: 1,
-    background: "#f1f5f9",
-    padding: "30px"
-  };
-
-  const topbar = {
-    background: "white",
-    padding: "15px",
-    marginBottom: "20px",
-    borderRadius: "8px",
-    display: "flex",
-    justifyContent: "space-between"
-  };
-
-  const cardContainer = {
-    display: "flex",
-    gap: "20px"
-  };
-
-  const card = {
-    background: "white",
-    padding: "20px",
-    borderRadius: "10px",
-    flex: 1,
-    boxShadow: "0 5px 10px rgba(0,0,0,0.1)"
-  };
-
-  const logoutBtn = {
-    background: "#ef4444",
-    color: "white",
-    border: "none",
-    padding: "8px 15px",
-    borderRadius: "5px",
-    cursor: "pointer"
-  };
-
-  const logout = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
+  const stats = [
+    {
+      title: "Total Users",
+      value: counts.users,
+      icon: <PeopleIcon sx={{ fontSize: 40, color: "#6366F1" }} />
+    },
+    {
+      title: "Project Managers",
+      value: counts.managers,
+      icon: <WorkIcon sx={{ fontSize: 40, color: "#6366F1" }} />
+    },
+    {
+      title: "Developers",
+      value: counts.developers,
+      icon: <CodeIcon sx={{ fontSize: 40, color: "#6366F1" }} />
+    },
+    {
+      title: "Total Projects",
+      value: counts.projects,
+      icon: <AssignmentIcon sx={{ fontSize: 40, color: "#6366F1" }} />
+    }
+  ];
 
   return (
-    <div style={layout}>
+    <>
+     
 
-      {/* Sidebar */}
-      <div style={sidebar}>
-        <h2>Admin Panel</h2>
+      <div style={{ display: "flex" }}>
+        <SuperadminSidebar />
 
-        <div style={menuItem}>Dashboard</div>
-        <div style={menuItem}>Manage Users</div>
-        <div style={menuItem}>Projects</div>
-        <div style={menuItem}>Reports</div>
-        <div style={menuItem}>Settings</div>
+        <div style={{ padding: "30px", width: "100%", background: "#F9FAFB", minHeight: "100vh" }}>
 
-      </div>
+          <Typography variant="h4" sx={{ marginBottom: "25px", fontWeight: "bold" }}>
+            Admin Dashboard
+          </Typography>
 
-      {/* Main Content */}
-      <div style={main}>
+          <Grid container spacing={3}>
+  {stats.map((item, index) => (
+    <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+                <Card sx={{ borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                  <CardContent style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 
-        {/* Top Bar */}
-        <div style={topbar}>
-          <h3>Super Admin Dashboard</h3>
-          <button style={logoutBtn} onClick={logout}>Logout</button>
-        </div>
+                    <div>
+                      <Typography variant="subtitle1">
+                        {item.title}
+                      </Typography>
 
-        {/* Stats */}
-        <div style={cardContainer}>
+                      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                        {item.value}
+                      </Typography>
+                    </div>
 
-          <div style={card}>
-            <h3>Total Users</h3>
-            <p style={{fontSize:"24px"}}>0</p>
-          </div>
+                    {item.icon}
 
-          <div style={card}>
-            <h3>Total Projects</h3>
-            <p style={{fontSize:"24px"}}>0</p>
-          </div>
-
-          <div style={card}>
-            <h3>Active Developers</h3>
-            <p style={{fontSize:"24px"}}>0</p>
-          </div>
-
-          <div style={card}>
-            <h3>Pending Tasks</h3>
-            <p style={{fontSize:"24px"}}>0</p>
-          </div>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
 
         </div>
-
       </div>
-
-    </div>
+    </>
   );
 }
 

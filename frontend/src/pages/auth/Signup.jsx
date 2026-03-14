@@ -1,145 +1,100 @@
-import React, { useState } from "react";
-import axios from "axios";
+// pages/auth/Signup.jsx
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { signupUser } from "../../services/authService";
+import "../../styles/signup.css";
 
 function Signup() {
-
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: "",
     email: "",
-    phoneno: "",
     password: "",
-    confirmPassword: ""
+    phoneno: "",      // ← yaha phone nahi, phoneno
+    company: "",
+    city: ""
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
+  // Password length check frontend me hi
+  if (form.password.length < 6) {
+    alert("Password must be at least 6 characters long!");
+    return; // backend pe mat bhej
+  }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/signup",
-        formData
-      );
+  // Optional: email format check (basic)
+  if (!form.email.includes("@") || !form.email.includes(".")) {
+    alert("Please enter a valid email address!");
+    return;
+  }
 
-      alert(res.data.message);
-      setFormData({
-      name: "",
-      email: "",
-      phoneno: "",
-      password: "",
-      confirmPassword: ""
-    });
+  // Optional: name check
+  if (form.name.trim().length < 2) {
+    alert("Full name must be at least 2 characters!");
+    return;
+  }
 
-    // ✅ Redirect to Login page
+  try {
+    const response = await signupUser(form);
+    alert(response.data.message || "Signup Successful! Now login.");
     navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || "Error");
-    }
-  };
+  } catch (err) {
+    console.error("Signup frontend error:", err.response?.data || err);
+    // Better error message from backend
+    const errorMsg = err.response?.data?.message || err.response?.data?.error || "Signup Failed. Please try again.";
+    alert(errorMsg);
+  }
+};
 
   return (
-    <>
-    <style>
-      {`
-        .form-control::placeholder {
-          color: white !important;
-          opacity: 1;
-        }
-        .custom-input,button {
-    background: transparent !important;
-    box-shadow: 0 0 10px rgba(255,255,255,0.8) !important;
-    border: 1px solid white !important;
-  }
+    <div className="signup-container">
+      <div className="signup-card">
+        <h2>Create Client Account</h2>
 
-  .custom-input,button:focus {
-    box-shadow: 0 0 20px rgba(255,255,255,1) !important;
-    border: 1px solid white !important;
-  }
-      `}
-    </style>
-    <div
-    
-    style={{
-      backgroundImage: "url('/images/b2.avif')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      minHeight: "100vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-      
-    }}
-  >
-    <div style={{ width: "400px", margin: "50px auto" }}>
-      <h2 className="text-center mb-4" style={{color:"white"}}>Client Signup</h2>
+        <div className="form-group">
+          <label>Full Name</label>
+          <input name="name" placeholder="Enter full name" onChange={handleChange} />
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          className="form-control bg-transparent text-white border-light custom-input"
-          placeholder="Full Name"
-          onChange={handleChange}
-          style={{
-    boxShadow: "0 0 10px rgba(255, 255, 255, 0.95)"
-  }}
-          required
-        /><br />
+        <div className="form-group">
+          <label>Email</label>
+          <input name="email" type="email" placeholder="Enter email" onChange={handleChange} />
+        </div>
 
-        <input
-          type="email"
-          name="email"
-          className="form-control bg-transparent text-white border-light custom-input"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        /><br />
+        <div className="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter password" onChange={handleChange} />
+        </div>
 
-        <input
-          type="text"
-          name="phoneno"
-          className="form-control bg-transparent text-white border-light custom-input"
-          placeholder="Phone Number"
-          onChange={handleChange}
-          required
-        /><br />
+        <div className="form-group">
+          <label>Phone</label>
+          <input name="phoneno" placeholder="Enter phone number" onChange={handleChange} />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          className="form-control bg-transparent text-white border-light custom-input"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        /><br />
+        <div className="form-group">
+          <label>Company</label>
+          <input name="company" placeholder="Enter company name" onChange={handleChange} />
+        </div>
 
-        <input
-          type="password"
-          name="confirmPassword"
-          className="form-control bg-transparent text-white border-light custom-input"
-          placeholder="Confirm Password"
-          onChange={handleChange}
-          required
-        /><br />
+        <div className="form-group">
+          <label>City</label>
+          <input name="city" placeholder="Enter city" onChange={handleChange} />
+        </div>
 
-        <button type="submit" className="btn  w-100" style={{color:"white",borderColor:"white"}}>Register</button>
-        <center><h4 style={{ color: "white", marginTop: "15px",fontSize:"80%"}}>Already have an account?{" "}
-          <Link to="/login" style={{ color: "white", textDecoration: "underline" }}>Sign in</Link>
-        </h4></center>
-      </form>
+        <button className="signup-btn" onClick={handleSignup}>
+          Create Account
+        </button>
+
+        <p className="login-link">
+          Already have account? <span onClick={() => navigate("/login")}>Login</span>
+        </p>
+      </div>
     </div>
-    </div>
-    </>
   );
 }
 

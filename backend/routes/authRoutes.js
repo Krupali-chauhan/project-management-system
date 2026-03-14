@@ -1,7 +1,9 @@
 import express from "express";
-import { signup, login } from "../controllers/authController.js";
-
+import { signup} from "../controllers/authController.js";
+import { login } from "../controllers/authController.js";
 import User from "../models/User.js";
+
+
 
 const router = express.Router();
 
@@ -12,7 +14,7 @@ router.get("/users", async (req, res) => {
 
   try {
 
-    const users = await User.find({ role: "client" });
+   const users = await User.find({ role: "client" }).select("-password");
 
     res.json(users);
 
