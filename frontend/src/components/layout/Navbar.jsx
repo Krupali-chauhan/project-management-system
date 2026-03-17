@@ -9,9 +9,17 @@ import {
   Badge
 } from "@mui/material";
 
+import LogoutIcon from "@mui/icons-material/Logout";
+
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ClientNavbar() {
+
+  // 🔹 localStorage mathi user data levu
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // 🔹 first letter avatar mate
+  const avatarLetter = user?.name ? user.name.charAt(0).toUpperCase() : "U";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -75,7 +83,7 @@ function ClientNavbar() {
               boxShadow: "0 2px 6px rgba(0,0,0,0.3)"
             }}
           >
-            C
+            {avatarLetter}
           </Avatar>
 
           {/* Logout */}
@@ -83,6 +91,7 @@ function ClientNavbar() {
           <Button
             variant="contained"
             onClick={handleLogout}
+            startIcon={<LogoutIcon />}
             sx={{
               background: "#ff4d4f",
               fontWeight: "bold",

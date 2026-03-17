@@ -1,129 +1,329 @@
-import React,{useState} from "react";
+// import React, { useState } from "react";
+// import axios from "axios";
+
+// function AddProjectManager() {
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     email: "",
+//     phoneno: "",
+//     city: "",
+//   });
+
+//   const [loading, setLoading] = useState(false);
+//   const [message, setMessage] = useState("");
+
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setMessage("");
+
+//     try {
+//       const token = localStorage.getItem("token");
+
+//       const res = await axios.post(
+//         "http://localhost:5000/api/admin/add-project-manager",
+//         formData,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       setMessage(res.data.message);
+//       // form reset optional
+//       setFormData({ name: "", email: "", phoneno: "", city: "" });
+//     } catch (err) {
+//       setMessage(
+//         err.response?.data?.message || "Something went wrong. Try again."
+//       );
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div style={{ maxWidth: "500px", margin: "40px auto", padding: "20px" }}>
+//       <h2>Add New Project Manager</h2>
+
+//       {message && (
+//         <p style={{ color: message.includes("success") ? "green" : "red" }}>
+//           {message}
+//         </p>
+//       )}
+
+//       <form onSubmit={handleSubmit}>
+//         <div style={{ marginBottom: "15px" }}>
+//           <label>Name *</label>
+//           <input
+//             type="text"
+//             name="name"
+//             value={formData.name}
+//             onChange={handleChange}
+//             required
+//             style={{ width: "100%", padding: "8px" }}
+//           />
+//         </div>
+
+//         <div style={{ marginBottom: "15px" }}>
+//           <label>Email *</label>
+//           <input
+//             type="email"
+//             name="email"
+//             value={formData.email}
+//             onChange={handleChange}
+//             required
+//             style={{ width: "100%", padding: "8px" }}
+//           />
+//         </div>
+
+//         <div style={{ marginBottom: "15px" }}>
+//           <label>Phone Number</label>
+//           <input
+//             type="text"
+//             name="phoneno"
+//             value={formData.phoneno}
+//             onChange={handleChange}
+//             style={{ width: "100%", padding: "8px" }}
+//           />
+//         </div>
+
+//         <div style={{ marginBottom: "20px" }}>
+//           <label>City</label>
+//           <input
+//             type="text"
+//             name="city"
+//             value={formData.city}
+//             onChange={handleChange}
+//             style={{ width: "100%", padding: "8px" }}
+//           />
+//         </div>
+
+//         <button
+//           type="submit"
+//           disabled={loading}
+//           style={{
+//             padding: "10px 20px",
+//             background: loading ? "#ccc" : "#007bff",
+//             color: "white",
+//             border: "none",
+//             cursor: loading ? "not-allowed" : "pointer",
+//           }}
+//         >
+//           {loading ? "Adding..." : "Add Project Manager"}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// }
+
+// export default AddProjectManager;
+import React, { useState } from "react";
 import axios from "axios";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  CircularProgress,
+  Alert,
+  Avatar
+} from "@mui/material";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-function AddProjectManager(){
+function AddProjectManager() {
 
-  const [form,setForm] = useState({
-    name:"",
-    email:"",
-    phone:"",
-    gender:"",
-    salary:""
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneno: "",
+    city: "",
   });
 
-  const handleChange=(e)=>{
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
-    setForm({
-      ...form,
-      [e.target.name]:e.target.value
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
-
   };
 
-  const handleSubmit=async(e)=>{
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try{
+    setLoading(true);
+    setMessage("");
+
+    try {
+
+      const token = localStorage.getItem("token");
 
       const res = await axios.post(
         "http://localhost:5000/api/admin/add-project-manager",
-        form
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
 
-      alert(res.data.message);
+      setMessage(res.data.message);
+      setSuccess(true);
 
+      setFormData({
+        name: "",
+        email: "",
+        phoneno: "",
+        city: ""
+      });
+
+    } catch (err) {
+
+      setSuccess(false);
+
+      setMessage(
+        err.response?.data?.message ||
+        "Something went wrong. Try again."
+      );
+
+    } finally {
+      setLoading(false);
     }
-    catch(error){
-
-      console.log(error);
-      alert("Error adding project manager");
-
-    }
-
   };
 
-  return(
+  return (
 
-    <div style={container}>
+    <Box
+      sx={{
+        mt: "70px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
 
-      <div style={card}>
+      <Paper
+        elevation={4}
+        sx={{
+          p: 4,
+          width: 450,
+          borderRadius: 3
+        }}
+      >
 
-      <h2 style={title}>Add Project Manager</h2>
+        {/* Header */}
 
-      <form onSubmit={handleSubmit} style={formStyle}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: 3
+          }}
+        >
 
-        <input style={input} name="name" placeholder="Name" onChange={handleChange}/>
+          <Avatar
+            sx={{
+              bgcolor: "primary.main",
+              width: 60,
+              height: 60,
+              mb: 1
+            }}
+          >
+            <PersonAddIcon fontSize="large" />
+          </Avatar>
 
-        <input style={input} name="email" placeholder="Email" onChange={handleChange}/>
+          <Typography variant="h5" fontWeight="bold">
+            Add Project Manager
+          </Typography>
 
-        <input style={input} name="phone" placeholder="Phone" onChange={handleChange}/>
+          <Typography variant="body2" color="text.secondary">
+            Create a new Project Manager account
+          </Typography>
 
-        <select style={input} name="gender" onChange={handleChange}>
-          <option value="">Select Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-        </select>
+        </Box>
 
-        <input style={input} name="salary" placeholder="Salary" onChange={handleChange}/>
+        {message && (
+          <Alert severity={success ? "success" : "error"} sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
 
-        <button style={button} type="submit">
-          Add Project Manager
-        </button>
+        <form onSubmit={handleSubmit}>
 
-      </form>
+          <TextField
+            label="Full Name"
+            name="name"
+            fullWidth
+            required
+            margin="normal"
+            value={formData.name}
+            onChange={handleChange}
+          />
 
-      </div>
+          <TextField
+            label="Email Address"
+            type="email"
+            name="email"
+            fullWidth
+            required
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-    </div>
+          <TextField
+            label="Phone Number"
+            name="phoneno"
+            fullWidth
+            margin="normal"
+            value={formData.phoneno}
+            onChange={handleChange}
+          />
 
+          <TextField
+            label="City"
+            name="city"
+            fullWidth
+            margin="normal"
+            value={formData.city}
+            onChange={handleChange}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            size="large"
+            sx={{ mt: 3 }}
+            disabled={loading}
+          >
+
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Add Project Manager"
+            )}
+
+          </Button>
+
+        </form>
+
+      </Paper>
+
+    </Box>
   );
-
 }
-
-const container={
-  background:"#f3f4f6",
-  minHeight:"100vh",
-  display:"flex",
-  justifyContent:"center",
-  alignItems:"center"
-};
-
-const card={
-  background:"white",
-  padding:"30px",
-  borderRadius:"10px",
-  boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
-  width:"350px"
-};
-
-const title={
-  textAlign:"center",
-  marginBottom:"20px",
-  color:"#333"
-};
-
-const formStyle={
-  display:"flex",
-  flexDirection:"column",
-  gap:"12px"
-};
-
-const input={
-  padding:"10px",
-  borderRadius:"5px",
-  border:"1px solid #ccc",
-  fontSize:"14px"
-};
-
-const button={
-  padding:"10px",
-  background:"#2563eb",
-  color:"white",
-  border:"none",
-  borderRadius:"5px",
-  cursor:"pointer",
-  fontSize:"15px"
-};
 
 export default AddProjectManager;

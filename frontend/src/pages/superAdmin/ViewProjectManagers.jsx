@@ -1,3 +1,91 @@
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+
+// function ViewProjectManagers() {
+//   const [pms, setPms] = useState([]);
+//   const navigate = useNavigate();
+
+//   const fetchPMs = async () => {
+//     const token = localStorage.getItem("token");
+
+//     const res = await axios.get(
+//       "http://localhost:5000/api/admin/project-managers",
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`
+//         }
+//       }
+//     );
+
+//     setPms(res.data);
+//   };
+
+//   useEffect(() => {
+//     fetchPMs();
+//   }, []);
+
+//   const deletePM = async (id) => {
+//     const token = localStorage.getItem("token");
+
+//     await axios.delete(
+//       `http://localhost:5000/api/admin/project-manager/${id}`,
+//       {
+//         headers: { Authorization: `Bearer ${token}` }
+//       }
+//     );
+
+//     fetchPMs();
+//   };
+
+//   return (
+//     <div>
+
+//       <h2>Project Managers</h2>
+
+//       <button onClick={() => navigate("/superAdmin/add-project-manager")}>
+//         Add Project Manager
+//       </button>
+
+//       <table border="1">
+//         <thead>
+//           <tr>
+//             <th>Name</th>
+//             <th>Email</th>
+//             <th>Phone</th>
+//             <th>City</th>
+//             <th>Action</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {pms.map((pm) => (
+//             <tr key={pm._id}>
+//               <td>{pm.name}</td>
+//               <td>{pm.email}</td>
+//               <td>{pm.phoneno}</td>
+//               <td>{pm.city}</td>
+
+//               <td>
+//                 <button onClick={() => navigate(`/superAdmin/edit-project-manager/${pm._id}`)}>
+//                   Edit
+//                 </button>
+
+//                 <button onClick={() => deletePM(pm._id)}>
+//                   Delete
+//                 </button>
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+
+//       </table>
+
+//     </div>
+//   );
+// }
+
+// export default ViewProjectManagers;
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -20,24 +108,24 @@ import {
   Button
 } from "@mui/material";
 
-import CodeIcon from "@mui/icons-material/Code";
+import PersonIcon from "@mui/icons-material/Person";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-function ViewDevelopers() {
+function ViewProjectManagers() {
 
-  const [developers, setDevelopers] = useState([]);
+  const [pms, setPms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  const fetchDevelopers = async () => {
+  const fetchPMs = async () => {
 
     const token = localStorage.getItem("token");
 
     const res = await axios.get(
-      "http://localhost:5000/api/admin/developers",
+      "http://localhost:5000/api/admin/project-managers",
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -45,28 +133,28 @@ function ViewDevelopers() {
       }
     );
 
-    setDevelopers(res.data);
+    setPms(res.data);
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchDevelopers();
+    fetchPMs();
   }, []);
 
-  const deleteDeveloper = async (id) => {
+  const deletePM = async (id) => {
 
-    if (!window.confirm("Delete this developer?")) return;
+    if (!window.confirm("Delete this project manager?")) return;
 
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/api/admin/developer/${id}`,
+      `http://localhost:5000/api/admin/project-manager/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` }
       }
     );
 
-    fetchDevelopers();
+    fetchPMs();
   };
 
   if (loading) {
@@ -78,7 +166,6 @@ function ViewDevelopers() {
   }
 
   return (
-
     <Box sx={{ mt: "70px", width: "100%" }}>
 
       {/* Header */}
@@ -95,11 +182,11 @@ function ViewDevelopers() {
         <Box>
 
           <Typography variant="h4" fontWeight="bold">
-            Developers
+            Project Managers
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            Manage and control all developers in your system
+            Manage and control all project managers in your system
           </Typography>
 
         </Box>
@@ -107,16 +194,16 @@ function ViewDevelopers() {
         <Button
           variant="contained"
           startIcon={<PersonAddIcon />}
-          onClick={() => navigate("/superAdmin/add-devloper")}
+          onClick={() => navigate("/superAdmin/add-project-manager")}
         >
-          Add Developer
+          Add Manager
         </Button>
 
       </Box>
 
       <Chip
-        icon={<CodeIcon />}
-        label={`${developers.length} Developers`}
+        icon={<PersonIcon />}
+        label={`${pms.length} Managers`}
         color="primary"
         variant="outlined"
         sx={{ mb: 3 }}
@@ -137,14 +224,14 @@ function ViewDevelopers() {
 
           <TableHead
             sx={{
-              background: "linear-gradient(90deg,#673ab7,#9575cd)"
+              background: "linear-gradient(90deg,#1976d2,#42a5f5)"
             }}
           >
 
             <TableRow>
 
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Developer
+                Manager
               </TableCell>
 
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
@@ -172,10 +259,10 @@ function ViewDevelopers() {
 
           <TableBody>
 
-            {developers.map((dev) => (
+            {pms.map((pm) => (
 
               <TableRow
-                key={dev._id}
+                key={pm._id}
                 hover
                 sx={{
                   transition: "0.2s",
@@ -187,32 +274,34 @@ function ViewDevelopers() {
 
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
 
-                    <Avatar sx={{ bgcolor: "secondary.main" }}>
-                      {dev.name?.charAt(0)}
+                    <Avatar sx={{ bgcolor: "primary.main" }}>
+                      {pm.name?.charAt(0)}
                     </Avatar>
 
                     <Typography fontWeight="medium">
-                      {dev.name}
+                      {pm.name}
                     </Typography>
 
                   </Box>
 
                 </TableCell>
 
-                <TableCell>{dev.email}</TableCell>
+                <TableCell>{pm.email}</TableCell>
 
-                <TableCell>{dev.phoneno}</TableCell>
+                <TableCell>{pm.phoneno}</TableCell>
 
-                <TableCell>{dev.city}</TableCell>
+                <TableCell>{pm.city}</TableCell>
+
+                {/* Actions */}
 
                 <TableCell align="center">
 
-                  <Tooltip title="Edit Developer">
+                  <Tooltip title="Edit Manager">
 
                     <IconButton
                       color="primary"
                       onClick={() =>
-                        navigate(`/superAdmin/edit-developer/${dev._id}`)
+                        navigate(`/superAdmin/edit-project-manager/${pm._id}`)
                       }
                     >
                       <EditIcon />
@@ -220,11 +309,11 @@ function ViewDevelopers() {
 
                   </Tooltip>
 
-                  <Tooltip title="Delete Developer">
+                  <Tooltip title="Delete Manager">
 
                     <IconButton
                       color="error"
-                      onClick={() => deleteDeveloper(dev._id)}
+                      onClick={() => deletePM(pm._id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -244,8 +333,7 @@ function ViewDevelopers() {
       </TableContainer>
 
     </Box>
-
   );
 }
 
-export default ViewDevelopers;
+export default ViewProjectManagers;

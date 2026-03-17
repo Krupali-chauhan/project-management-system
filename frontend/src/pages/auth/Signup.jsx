@@ -5,6 +5,7 @@ import { signupUser } from "../../services/authService";
 import "../../styles/signup.css";
 
 function Signup() {
+  
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -21,11 +22,37 @@ function Signup() {
   };
 
   const handleSignup = async () => {
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailPattern.test(form.email)) {
+  alert("Please enter a valid email address");
+  return;
+}
   // Password length check frontend me hi
   if (form.password.length < 6) {
     alert("Password must be at least 6 characters long!");
     return; // backend pe mat bhej
   }
+  if (!form.phoneno) {
+  alert("Please enter your phone number");
+  return;
+}
+const phonePattern = /^[0-9]{10}$/;
+if (!phonePattern.test(form.phoneno)) {
+  alert("Phone number must be 10 digits");
+  return;
+}
+if (!form.company.trim()) {
+  alert("Please enter your company name");
+  return;
+}
+
+// City validation
+if (!form.city.trim()) {
+  alert("Please enter your city");
+  return;
+}
+
 
   // Optional: email format check (basic)
   if (!form.email.includes("@") || !form.email.includes(".")) {

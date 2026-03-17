@@ -26,10 +26,10 @@ function Login() {
 
       if (role === "superadmin" || role === "admin") {
         navigate("/superAdmin/SuperAdminDashboard");
-      } else if (role === "project_manager") {
+      } else if (role === "projectmanager") {
         navigate("/pm/pmdashboard");
       } else if (role === "developer") {
-        navigate("/developer/DeveloperDashboard");
+        navigate("/developer/developer-dashboard");
       } else if (role === "client") {
         navigate("/client/Dashboard");
       } else {

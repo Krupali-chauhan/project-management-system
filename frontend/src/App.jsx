@@ -1,148 +1,131 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-
 import ClientNavbar from "./components/layout/Navbar";
 import ClientSidebar from "./components/layout/ClientSidebar";
-
+import SuperadminSidebar from "./components/layout/Superadminsidebar";   // ← import karo (naam check kar lena)
+// import ProjectManagerSidebar from "./components/layout/ProjectManagerSidebar"; // agar bana hai to
+// import DeveloperSidebar from "./components/layout/DeveloperSidebar";
+//            // agar bana hai to
+import SuperAdminLayout from "./pages/superAdmin/SuperAdminLayout";
+// Pages
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 
 import ClientDashboard from "./pages/client/ClientDashboard";
 import CreateProject from "./pages/client/CreateProject";
+import MyProjects from "./pages/client/MyProjects";
 import ViewSOW from "./pages/client/ViewSOW";
 import SOWDetail from "./pages/client/SOWDetail";
 
 import SuperAdminDashboard from "./pages/superAdmin/SuperAdminDashboard";
-import ViewUsers from "./pages/superAdmin/ViewUsers";
+import AddProjectManager from "./pages/superAdmin/AddProjectManager";
+import ViewProjectManagers from "./pages/superAdmin/ViewProjectManagers";
+import EditProjectManager from "./pages/superAdmin/EditProjectManager";
+
+// import ViewUsers from "./pages/superAdmin/ViewUsers";
 import ViewProjects from "./pages/superAdmin/ViewProjects";
-import ViewDeveloper from "./pages/superAdmin/ViewDeveloper";
+import EditDeveloper from "./pages/superAdmin/EditDeveloper";
+// import ViewDeveloper from "./pages/superAdmin/ViewDeveloper";
+import AddDeveloper from "./pages/superAdmin/AddDeveloper";
 
 import PMDashboard from "./pages/projectManager/PMDashboard";
-import AddDeveloper from "./pages/projectManager/AddDeveloper";
+
 
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
+import ViewDevelopers from "./pages/superAdmin/ViewDeveloper";
 
 function App() {
-
   return (
-
-  <BrowserRouter>
-
+    <BrowserRouter>
       <Routes>
 
-        {/* PUBLIC PAGES (NO NAVBAR) */}
-
+        {/* Public - no layout */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-
-        {/* CLIENT LAYOUT */}
-
+        {/* ─── CLIENT ─── (tumhara existing pattern) */}
         <Route
           path="/client/*"
           element={
             <>
               <ClientNavbar />
-
               <div style={{ display: "flex" }}>
                 <ClientSidebar />
-
-                <Routes>
-                  <Route path="dashboard" element={<ClientDashboard />} />
-                  <Route path="create-project" element={<CreateProject />} />
-                  <Route path="view-sow" element={<ViewSOW />} />
-                  <Route path="sow-detail/:id" element={<SOWDetail />} />
-                </Routes>
+                <main style={{ flex: 1, padding: "20px" }}>
+                  <Routes>
+                    <Route path="dashboard" element={<ClientDashboard />} />
+                    <Route path="create-project" element={<CreateProject />} />
+                    <Route path="create-project/:id" element={<CreateProject />} />
+                    <Route path="my-projects" element={<MyProjects />} />
+                    <Route path="view-sow" element={<ViewSOW />} />
+                    <Route path="sow-detail/:id" element={<SOWDetail />} />
+                  </Routes>
+                </main>
               </div>
             </>
           }
         />
 
+        {/* ─── SUPER ADMIN ─── (client jaisa pattern) */}
+     <Route path="/superAdmin" element={<SuperAdminLayout />}>
+  <Route path="SuperAdminDashboard" element={<SuperAdminDashboard />} />
+   <Route path="viewproject" element={<ViewProjects />} />
+  <Route path="add-project-manager" element={<AddProjectManager />} />
+   <Route path="view-project-manager" element={<ViewProjectManagers />} />
+    <Route path="add-devloper" element={<AddDeveloper />} />
 
-        {/* SUPER ADMIN */}
+   <Route path="view-devloper" element={<ViewDevelopers />} />
 
+   <Route path="edit-developer/:id" element={<EditDeveloper />} />
+   <Route
+ path="/superAdmin/edit-project-manager/:id"
+ element={<EditProjectManager />}
+/>
+</Route>
+
+        {/* ─── PROJECT MANAGER ─── */}
         <Route
-          path="/superAdmin/SuperAdminDashboard"
+          path="/pm/*"
           element={
             <>
               <ClientNavbar />
-              <SuperAdminDashboard />
+              <div style={{ display: "flex" }}>
+                {/* <ProjectManagerSidebar />   agar bana hai to import karo */}
+                <main style={{ flex: 1, padding: "20px" }}>
+                  <Routes>
+                    <Route path="pmdashboard" element={<PMDashboard />} />
+                    <Route path="add-developer" element={<AddDeveloper />} />
+                    {/* aur baki PM pages yahan add kar sakte ho */}
+                  </Routes>
+                </main>
+              </div>
             </>
           }
         />
 
+        {/* ─── DEVELOPER ─── */}
         <Route
-          path="/view-users"
+          path="/developer/*"
           element={
             <>
               <ClientNavbar />
-              <ViewUsers />
+              <div style={{ display: "flex" }}>
+                {/* <DeveloperSidebar />   agar bana hai to */}
+                <main style={{ flex: 1, padding: "20px" }}>
+                  <Routes>
+                    <Route path="developer-dashboard" element={<DeveloperDashboard />} />
+                    {/* aur baki developer pages */}
+                  </Routes>
+                </main>
+              </div>
             </>
           }
         />
 
-        <Route
-          path="/view-projects"
-          element={
-            <>
-              <ClientNavbar />
-              <ViewProjects />
-            </>
-          }
-        />
-
-        <Route
-          path="/viewDeveloper"
-          element={
-            <>
-              <ClientNavbar />
-              <ViewDeveloper />
-            </>
-          }
-        />
-
-
-        {/* PROJECT MANAGER */}
-
-        <Route
-          path="/pm/pmdashboard"
-          element={
-            <>
-              <ClientNavbar />
-              <PMDashboard />
-            </>
-          }
-        />
-
-        <Route
-          path="/pm/add-developer"
-          element={
-            <>
-              <ClientNavbar />
-              <AddDeveloper />
-            </>
-          }
-        />
-
-
-        {/* DEVELOPER */}
-
-        <Route
-          path="/developer/DeveloperDashboard"
-          element={
-            <>
-              <ClientNavbar />
-              <DeveloperDashboard />
-            </>
-          }
-        />
-
-        <Route path="*" element={<Navigate to="/" />} />
-
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-
     </BrowserRouter>
   );
 }

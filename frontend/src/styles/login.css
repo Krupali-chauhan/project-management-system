@@ -3,16 +3,23 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#5b6ee1,#4a7cf3);
+
+/* Background Image */
+background-image: url("/images/back.webp");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
 font-family:Arial, Helvetica, sans-serif;
 }
 
 .login-card{
 width:380px;
-background:white;
+background: rgba(0,0,0,0.5);
+color: white;
 padding:40px;
 border-radius:12px;
-box-shadow:0 20px 40px rgba(0,0,0,0.2);
+box-shadow:0 20px 40px rgb(252, 252, 252);
 }
 
 /* .login-logo{
@@ -23,18 +30,21 @@ margin-bottom:15px;
 .login-card h2{
 text-align:center;
 margin-bottom:25px;
+font-size: 35px;
 }
 
 .form-group{
 display:flex;
 flex-direction:column;
 margin-bottom:15px;
+color:white;
 }
 
 .form-group label{
-font-size:14px;
-margin-bottom:5px;
-color:#374151;
+font-size:18px;     /* size increase */
+margin-bottom:6px;
+color:white;        /* label white */
+font-weight:600;
 }
 
 .form-group input{
@@ -54,7 +64,7 @@ box-shadow:0 0 0 2px rgba(99,102,241,0.2);
 width:100%;
 margin-top:15px;
 padding:12px;
-background:#6366f1;
+background:#018bb1;
 border:none;
 border-radius:6px;
 color:white;
@@ -64,7 +74,7 @@ transition:0.3s;
 }
 
 .login-btn:hover{
-background:#4f46e5;
+background:#018bb1;
 }
 
 .signup-link{
@@ -74,7 +84,7 @@ font-size:14px;
 }
 
 .signup-link span{
-color:#4f46e5;
+color:#018bb1;
 font-weight:600;
 cursor:pointer;
 }

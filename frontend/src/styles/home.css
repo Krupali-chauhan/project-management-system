@@ -3,26 +3,31 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#5b6ee1,#4a7cf3);
+background-image: url("/images/back.webp");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
 font-family:Arial, Helvetica, sans-serif;
 }
 
 .home-card{
-background:white;
+background:rgba(0, 0, 0, 0.5);
 padding:60px 70px;
 border-radius:14px;
-box-shadow:0 20px 40px rgba(0,0,0,0.2);
+box-shadow:0 20px 40px rgba(249, 249, 249, 0.995);
 text-align:center;
 }
 
 .home-card h1{
 margin-bottom:20px;
 font-size:28px;
+color: white;
 }
 
 .question{
 font-size:18px;
 margin-bottom:25px;
+color: white;
 }
 
 .btn-group{

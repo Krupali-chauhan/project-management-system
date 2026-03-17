@@ -1,23 +1,30 @@
 .signup-container{
-height:100vh;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#5b6ee1,#4a7cf3);
+background-image: url("/images/back.webp");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
 font-family:Arial, Helvetica, sans-serif;
 }
 
 .signup-card{
 width:420px;
-background:white;
-padding:40px;
+background:rgb(0,0,0,0.5);
+padding:25px;
 border-radius:12px;
-box-shadow:0 20px 40px rgba(0,0,0,0.2);
+box-shadow:0 20px 40px rgba(252, 252, 252, 0.973);
+margin-top: 15px;
+margin-bottom: 10px;
+color:white;
 }
 
 .signup-card h2{
 text-align:center;
-margin-bottom:25px;
+margin-bottom:20px;
+color:white;
 }
 
 .form-group{
@@ -29,7 +36,7 @@ flex-direction:column;
 .form-group label{
 font-size:14px;
 margin-bottom:5px;
-color:#374151;
+color:white;
 }
 
 .form-group input{
@@ -49,7 +56,7 @@ box-shadow:0 0 0 2px rgba(99,102,241,0.2);
 width:100%;
 margin-top:15px;
 padding:12px;
-background:#6366f1;
+background:#018bb1;
 border:none;
 border-radius:6px;
 color:white;
@@ -59,7 +66,7 @@ transition:0.3s;
 }
 
 .signup-btn:hover{
-background:#4f46e5;
+background:#018bb1;
 }
 
 .login-link{
@@ -69,7 +76,7 @@ font-size:14px;
 }
 
 .login-link span{
-color:#4f46e5;
+color:#018bb1;
 cursor:pointer;
 font-weight:600;
 }

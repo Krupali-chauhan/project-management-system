@@ -1,110 +1,49 @@
 import express from "express";
-import ProjectManager from "../models/ProjectManager.js";
-import User from "../models/User.js";
-import Project from "../models/Project.js";
-import nodemailer from "nodemailer";
-import { addDeveloper } from "../controllers/adminController.js";
-import { viewDevelopers } from "../controllers/adminController.js";
-import { viewProjectManager } from "../controllers/adminController.js";
+import {
+  addProjectManager,
+  getDashboardCounts,
+  getProjectManagers,
+  deleteProjectManager,
+updateProjectManager,
+getSingleProjectManager,
+ getAllProjects,
+  approveProject,
+  rejectProject,
+  getDevelopers,
+  deleteDeveloper,
+  getSingleDeveloper,
+  updateDeveloper,
+  addDeveloper
+
+} from "../controllers/adminController.js";
+
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-router.post("/add-developer", addDeveloper);
 
-router.get("/view-project-manager",viewProjectManager);
+router.post("/add-project-manager", protect, addProjectManager);
+router.get("/dashboard-count", protect, getDashboardCounts);
+router.get("/project-managers", getProjectManagers);
+router.get("/project-manager/:id", getSingleProjectManager);
 
-router.get("/view-developers",viewDevelopers);
+router.delete("/project-manager/:id", deleteProjectManager);
 
-router.post("/add-project-manager", async (req,res)=>{
+router.put("/project-manager/:id", updateProjectManager);
+router.get("/projects", getAllProjects);
 
-  try{
+router.put("/project/approve/:id", approveProject);
 
-    const {name,email,phone,gender,salary} = req.body;
+router.put("/project/reject/:id", rejectProject);
+router.get("/developers", getDevelopers);
 
-    const password = Math.random().toString(36).slice(-8);
+router.delete("/developer/:id", deleteDeveloper);
 
-    const pm = new ProjectManager({
+router.get("/developer/:id", getSingleDeveloper);
 
-      name,
-      email,
-      phone,
-      gender,
-      salary,
-      password
+router.put("/developer/:id", updateDeveloper);
+router.post("/add-developer", protect, addDeveloper);
 
-    });
 
-    await pm.save();
 
-    const transporter = nodemailer.createTransport({
-
-      service:"gmail",
-
-      auth:{
-        user:process.env.EMAIL_USER,
-        pass:process.env.EMAIL_PASS
-      }
-
-    });
-
-    await transporter.sendMail({
-
-      from:process.env.EMAIL_USER,
-      to:email,
-      subject:"Project Manager Login",
-
-      text:`Login Details
-
-Email: ${email}
-Password: ${password}`
-
-    });
-
-    res.json({
-      message:"Project Manager Added"
-    });
-
-  }
-  catch(error){
-
-    console.log(error);
-
-    res.status(500).json({
-      error:"Server Error"
-    });
-
-  }
-
-});
-router.get("/dashboard-count", async (req,res)=>{
-
-  try{
-
-    const users = await User.countDocuments({ role:"client" });
-
-    const managers = await User.countDocuments({ role:"project_manager" });
-
-    const developers = await User.countDocuments({ role:"developer" });
-
-    const projects = await Project.countDocuments();
-
-    res.json({
-      users,
-      managers,
-      developers,
-      projects
-    });
-
-  }
-  catch(error){
-
-    console.log(error);
-
-    res.status(500).json({
-      error:"Server Error"
-    });
-
-  }
-
-});
 
 export default router;
