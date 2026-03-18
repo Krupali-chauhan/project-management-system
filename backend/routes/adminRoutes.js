@@ -13,7 +13,9 @@ getSingleProjectManager,
   deleteDeveloper,
   getSingleDeveloper,
   updateDeveloper,
-  addDeveloper
+  addDeveloper,
+  assignProjectManager,
+    createProjectByAdmin
 
 } from "../controllers/adminController.js";
 
@@ -34,6 +36,10 @@ router.get("/projects", getAllProjects);
 router.put("/project/approve/:id", approveProject);
 
 router.put("/project/reject/:id", rejectProject);
+router.put("/project/create/:id", protect, createProjectByAdmin);
+
+// ✅ Assign PM (IMPORTANT)
+router.put("/assign-pm", protect, assignProjectManager);
 router.get("/developers", getDevelopers);
 
 router.delete("/developer/:id", deleteDeveloper);

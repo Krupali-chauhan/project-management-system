@@ -7,16 +7,19 @@ import cors from "cors";
 import projectRoutes from "./routes/ProjectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import projectManagerRoutes from "./routes/projectManagerRoutes.js";
+import pmRoutes from "./routes/projectManagerRoutes.js";
 
 dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use("/api/projectmanager", projectManagerRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/projectmanager", pmRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDB Connected"))

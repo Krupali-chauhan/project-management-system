@@ -1,5 +1,6 @@
 import Project from "../models/Project.js";
 import generateSOW from "../utils/aiSOW.js";
+import ProjectRequest from "../models/ProjectRequest.js";
 
 export const createProject = async (req, res) => {
 
@@ -171,3 +172,90 @@ export const updateProject = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ✅ PM PROJECTS (FIXED)
+export const getPMProjects = async (req, res) => {
+  try {
+
+    const projects = await Project.find({
+      assignedPM: req.user.id   // ✅ FIX
+    });
+
+    res.json(projects);
+
+  } catch (error) {
+    console.log("PM ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// export const getPMDashboard = async (req, res) => {
+//   try {
+
+//     const pmId = req.user.id;
+
+//     // ✅ Assigned projects
+//     const projects = await Project.find({ assignedPM: pmId });
+
+//     // ✅ Counts (simple logic)
+//     const stats = {
+//       projects: projects.length,
+//       developers: 0,   // optional (future ma add karisu)
+//       tasks: 0,
+//       pendingTasks: 0
+//     };
+
+//     res.json({
+//       stats,
+//       projects
+//     });
+
+//   } catch (error) {
+//     console.log("PM DASHBOARD ERROR:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
+// //adminside crete-project
+// export const createProjectFromRequest = async (req, res) => {
+//   console.log("API HIT");
+//   try {
+
+//     const request = await ProjectRequest.findById(req.params.id);
+
+//     if (!request) {
+//       return res.status(404).json({ message: "Request not found" });
+//     }
+
+//     if (request.status !== "approved") {
+//       return res.status(400).json({ message: "Only approved allowed" });
+//     }
+
+//     // NEW PROJECT CREATE
+//     const project = new Project({
+//       clientId: request.clientId,
+//       title: request.title,
+//       description: request.description,
+//       budget: request.budget,
+//       deadline: request.deadline,
+//       technology: request.technology,
+//       status: "active"
+//     });
+
+//     await project.save();
+
+//     // Request update (important)
+//     request.status = "converted";
+//     await request.save();
+
+//     res.json({
+//       message: "Project created successfully",
+//       project
+//     });
+
+//   } catch (error) {
+//     console.log("ERROR:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };

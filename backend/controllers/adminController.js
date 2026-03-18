@@ -140,7 +140,8 @@ export const getAllProjects = async (req, res) => {
   try {
 
     const projects = await Project.find()
-      .populate("clientId", "name email"); // client info
+      .populate("clientId", "name email")
+      .populate("assignedPM", "name email"); // client info
 
     res.json(projects);
 
@@ -173,6 +174,35 @@ export const rejectProject = async (req, res) => {
 
   res.json(project);
 
+};
+// ✅ ASSIGN PM (MAIN FIX)
+// =============================
+export const assignProjectManager = async (req, res) => {
+  try {
+
+    const { projectId, pmId } = req.body;
+
+    const project = await Project.findById(projectId);
+    const pm = await User.findById(pmId);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    if (!pm || pm.role !== "projectManager") {
+      return res.status(400).json({ message: "Invalid PM" });
+    }
+
+    project.assignedPM = pmId;
+    project.status = "assigned";
+
+    await project.save();
+
+    res.json({ message: "PM Assigned Successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 export const addDeveloper = async (req, res) => {
   try {
@@ -272,4 +302,28 @@ export const updateDeveloper = async (req, res) => {
 
   res.json(dev);
 
+};
+// ✅ CREATE PROJECT (ADMIN)
+export const createProjectByAdmin = async (req, res) => {
+  try {
+
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    if (project.status !== "approved") {
+      return res.status(400).json({ message: "Project not approved" });
+    }
+
+    project.status = "pending";   // ✅ FIXED
+
+    await project.save();
+
+    res.json({ message: "Project created", project });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import ClientNavbar from "./components/layout/Navbar";
 import ClientSidebar from "./components/layout/ClientSidebar";
-import SuperadminSidebar from "./components/layout/Superadminsidebar";   // ← import karo (naam check kar lena)
+// import SuperadminSidebar from "./components/layout/SuperadminSidebar";   // ← import karo (naam check kar lena)
 // import ProjectManagerSidebar from "./components/layout/ProjectManagerSidebar"; // agar bana hai to
 // import DeveloperSidebar from "./components/layout/DeveloperSidebar";
 //            // agar bana hai to
@@ -11,6 +11,7 @@ import SuperAdminLayout from "./pages/superAdmin/SuperAdminLayout";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import ChangePassword from "./pages/auth/ChangePassword"
 
 import ClientDashboard from "./pages/client/ClientDashboard";
 import CreateProject from "./pages/client/CreateProject";
@@ -23,13 +24,15 @@ import AddProjectManager from "./pages/superAdmin/AddProjectManager";
 import ViewProjectManagers from "./pages/superAdmin/ViewProjectManagers";
 import EditProjectManager from "./pages/superAdmin/EditProjectManager";
 
-// import ViewUsers from "./pages/superAdmin/ViewUsers";
+import ViewUsers from "./pages/superAdmin/ViewUsers";
 import ViewProjects from "./pages/superAdmin/ViewProjects";
 import EditDeveloper from "./pages/superAdmin/EditDeveloper";
 // import ViewDeveloper from "./pages/superAdmin/ViewDeveloper";
 import AddDeveloper from "./pages/superAdmin/AddDeveloper";
+import AdminProjects from "./pages/superAdmin/AdminProjects";
 
 import PMDashboard from "./pages/projectManager/PMDashboard";
+import AssignDevelopers from "./pages/projectManager/AssignDevelopers";
 
 
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
@@ -44,6 +47,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/change-password" element={<ChangePassword />} />
 
         {/* ─── CLIENT ─── (tumhara existing pattern) */}
         <Route
@@ -75,8 +79,9 @@ function App() {
   <Route path="add-project-manager" element={<AddProjectManager />} />
    <Route path="view-project-manager" element={<ViewProjectManagers />} />
     <Route path="add-devloper" element={<AddDeveloper />} />
-
+    <Route path="admin-projects" element={<AdminProjects />} />
    <Route path="view-devloper" element={<ViewDevelopers />} />
+   <Route path="view-users" element={<ViewUsers />} />
 
    <Route path="edit-developer/:id" element={<EditDeveloper />} />
    <Route
@@ -97,6 +102,7 @@ function App() {
                   <Routes>
                     <Route path="pmdashboard" element={<PMDashboard />} />
                     <Route path="add-developer" element={<AddDeveloper />} />
+                    <Route path="assign-developers" element={<AssignDevelopers />} />
                     {/* aur baki PM pages yahan add kar sakte ho */}
                   </Routes>
                 </main>

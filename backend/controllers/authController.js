@@ -131,7 +131,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    const isMatch = await user.matchPassword(password.trim());
+    // 🔍 DEBUG START
+console.log("Entered Password:", password);
+console.log("DB Password:", user.password);
+
+const isMatch = await user.matchPassword(password.trim());
+console.log("Password Match:", isMatch);
+// 🔍 DEBUG END
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid password" });
@@ -152,5 +158,135 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error("Login error:", error.message);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// export const changePassword = async (req, res) => {
+
+//   const user = await User.findById(req.user.id);
+//   console.log("Logged User:", req.user);
+//     console.log("Found User:", user);
+
+//   const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
+
+//   if (!isMatch) {
+//     return res.status(400).json({ message: "Current password incorrect" });
+//   }
+
+//   const salt = await bcrypt.genSalt(10);
+//   user.password = req.body.newPassword;
+// await user.save();
+
+//   await user.save();
+
+//   res.json({ message: "Password updated" });
+// };
+
+export const changePassword = async (req, res) => {
+  try {
+
+    console.log("USER:", req.user);
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(
+      req.body.currentPassword,
+      user.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password incorrect" });
+    }
+
+    // ✅ direct set karo (pre-save hash karega)
+    user.password = req.body.newPassword;
+
+    await user.save();
+
+    res.json({ message: "Password updated" });
+
+  } catch (error) {
+    console.log("ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ================= PM FUNCTIONS =================
+
+// ✅ 1. Assign Developer to PM
+// export const assignDeveloperToPM = async (req, res) => {
+//   try {
+//     const { developerId } = req.body;
+
+//     const dev = await User.findById(developerId);
+
+//     if (!dev || dev.role !== "developer") {
+//       return res.status(400).json({ message: "Invalid developer" });
+//     }
+
+//     // optional: already assigned check
+//     if (dev.assignedPM) {
+//       return res.status(400).json({ message: "Already assigned to another PM" });
+//     }
+
+//     dev.assignedPM = req.user._id;
+
+//     await dev.save();
+
+//     res.json({ message: "Developer assigned successfully", dev });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+export const assignDeveloperToPM = async (req, res) => {
+  try {
+    const { developerId } = req.body;
+
+    const dev = await User.findById(developerId);
+
+    if (!dev || dev.role !== "developer") {
+      return res.status(400).json({ message: "Invalid developer" });
+    }
+
+    // 🔥 MAIN LINE (DATABASE SAVE)
+    dev.assignedPM = req.user._id;
+
+    await dev.save();   // ✅ aa line thi DB ma store thay chhe
+
+    res.json({ message: "Developer assigned", dev });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+// ✅ 2. Get ALL developers (admin created)
+export const getAllDevelopers = async (req, res) => {
+  try {
+    const devs = await User.find({ role: "developer" });
+    res.json(devs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+// ✅ 3. Get ONLY my developers
+export const getMyDevelopers = async (req, res) => {
+  try {
+    const devs = await User.find({
+      role: "developer",
+      assignedPM: req.user._id
+    });
+
+    res.json(devs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

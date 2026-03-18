@@ -41,10 +41,20 @@ const userSchema = new mongoose.Schema(
       enum: ["superAdmin", "projectManager", "developer", "client"],
       default: "client",
     },
+    assignedPM: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+  },
 
     isActive: {
       type: Boolean,
       default: true,
+    },
+    // ✅ NEW FIELD (Who created this user)
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {

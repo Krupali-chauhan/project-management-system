@@ -12,8 +12,15 @@ import {
 import LogoutIcon from "@mui/icons-material/Logout";
 
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Menu, MenuItem } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ClientNavbar() {
+
+  const [anchorEl, setAnchorEl] = useState(null);
+const open = Boolean(anchorEl);
+const navigate = useNavigate();
 
   // 🔹 localStorage mathi user data levu
   const user = JSON.parse(localStorage.getItem("user"));
@@ -25,6 +32,19 @@ function ClientNavbar() {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+
+  const handleAvatarClick = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleClose = () => {
+  setAnchorEl(null);
+};
+
+const goToChangePassword = () => {
+  handleClose();
+  navigate("/change-password");
+};
 
   return (
 
@@ -77,14 +97,28 @@ function ClientNavbar() {
           {/* Avatar */}
 
           <Avatar
+          onClick={handleAvatarClick}
             sx={{
               bgcolor: "#ff9800",
               fontWeight: "bold",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.3)"
+              boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+              cursor: "pointer"
             }}
           >
             {avatarLetter}
           </Avatar>
+
+          {/* 🔽 Menu (Avatar click pachi open thase) */}
+
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={goToChangePassword}>
+              Change Password
+            </MenuItem>
+          </Menu>
 
           {/* Logout */}
 
