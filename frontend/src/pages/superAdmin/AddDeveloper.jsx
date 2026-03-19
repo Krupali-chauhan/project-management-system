@@ -22,6 +22,7 @@ function AddDeveloper() {
     name: "",
     email: "",
     phoneno: "",
+    department:"",
     city: ""
   });
 
@@ -138,6 +139,25 @@ function AddDeveloper() {
               />
 
             </Grid>
+            <Grid item xs={12}>
+
+  <TextField
+    select
+    fullWidth
+    label="Department"
+    name="department"
+    value={formData.department}
+    onChange={handleChange}
+    SelectProps={{ native: true }}
+  >
+    <option value="">Select Department</option>
+    <option value="frontend">Frontend</option>
+    <option value="backend">Backend</option>
+    <option value="tester">Tester</option>
+    <option value="analysis">Analysis</option>
+  </TextField>
+
+</Grid>
 
             <Grid item xs={12}>
 

@@ -15,7 +15,8 @@ getSingleProjectManager,
   updateDeveloper,
   addDeveloper,
   assignProjectManager,
-    createProjectByAdmin
+    createProjectByAdmin,
+    getAdminProjects
 
 } from "../controllers/adminController.js";
 
@@ -48,7 +49,7 @@ router.get("/developer/:id", getSingleDeveloper);
 
 router.put("/developer/:id", updateDeveloper);
 router.post("/add-developer", protect, addDeveloper);
-
+router.get("/admin-projects", protect, getAdminProjects);
 
 
 

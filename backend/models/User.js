@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    department: String,
     company: {
       type: String,
       trim: true,

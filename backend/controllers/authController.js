@@ -290,3 +290,26 @@ export const getMyDevelopers = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const removeDeveloperFromPM = async (req, res) => {
+  try {
+
+    const { developerId } = req.body;
+
+    const dev = await User.findById(developerId);
+
+    if (!dev) {
+      return res.status(400).json({ message: "Developer not found" });
+    }
+
+    // ✅ MAIN LOGIC (null karna)
+    dev.assignedPM = null;
+
+    await dev.save();
+
+    res.json({ message: "Developer removed" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

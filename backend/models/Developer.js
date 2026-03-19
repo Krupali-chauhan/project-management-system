@@ -5,6 +5,7 @@ const developerSchema = new mongoose.Schema({
   name:String,
   email:String,
   phoneno:String,
+  department:String,
   city:String,
   password:String,
 

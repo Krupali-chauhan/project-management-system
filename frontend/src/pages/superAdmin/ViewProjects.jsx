@@ -209,6 +209,9 @@ function ViewProjects() {
   const [projects, setProjects] = useState([]);
   const [openSow, setOpenSow] = useState(false);
   const [selectedSow, setSelectedSow] = useState("");
+  const [openDesc, setOpenDesc] = useState(false);
+const [selectedProjectId, setSelectedProjectId] = useState("");
+const [description, setDescription] = useState("");
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -244,13 +247,32 @@ const fetchProjects = async () => {
   }
 };
   // ✅ CREATE PROJECT
-  const createProject = async (id) => {
+//   const createProject = async (id) => {
+//   try {
+//     await axios.put(
+//       `http://localhost:5000/api/admin/project/create/${id}`,
+//       {},
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
+
+//     navigate("/superAdmin/admin-projects");
+
+//   } catch (err) {
+//     console.log(err);
+//     alert("Error");
+//   }
+// };
+
+const createProject = async () => {
   try {
     await axios.put(
-      `http://localhost:5000/api/admin/project/create/${id}`,
-      {},
+      `http://localhost:5000/api/admin/project/create/${selectedProjectId}`,
+      { description },   // ✅ NEW
       { headers: { Authorization: `Bearer ${token}` } }
     );
+
+    setOpenDesc(false);
+    setDescription("");
 
     navigate("/superAdmin/admin-projects");
 
@@ -296,7 +318,7 @@ const fetchProjects = async () => {
                   {proj.status === "pending" && (
                     <Chip label="Pending" color="warning" />
                   )}
-                  {proj.status === "approved" && (
+                  {proj.status === "approved" && proj.status !== "created" && (
                     <Chip label="Approved" color="success" />
                   )}
                   {proj.status === "rejected" && (
@@ -314,7 +336,10 @@ const fetchProjects = async () => {
                       <Button
                         variant="contained"
                         sx={{ mr: 1 }}
-                        onClick={() => createProject(proj._id)}
+                        onClick={() => {
+  setSelectedProjectId(proj._id);
+  setOpenDesc(true);
+}}
                       >
                         Create Project
                       </Button>
@@ -328,6 +353,35 @@ const fetchProjects = async () => {
                       >
                         View SOW
                       </Button>
+
+                      <Dialog open={openDesc} onClose={() => setOpenDesc(false)} fullWidth>
+  <DialogTitle>Add Project Description</DialogTitle>
+
+  <DialogContent>
+
+    <textarea
+      rows="4"
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginTop: "10px"
+      }}
+      placeholder="Enter project description..."
+      value={description}
+      onChange={(e) => setDescription(e.target.value)}
+    />
+
+    <Box sx={{ mt: 2, textAlign: "right" }}>
+      <Button
+        variant="contained"
+        onClick={createProject}
+      >
+        Submit
+      </Button>
+    </Box>
+
+  </DialogContent>
+</Dialog>
                     </>
                   )}
 

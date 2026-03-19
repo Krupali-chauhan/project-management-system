@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import Project from "../models/Project.js";
+import AdminProject from "../models/AdminProject.js";
 import generateToken from "../utils/generateToken.js";   // optional – agar token bhejna hai to
 
 export const addProjectManager = async (req, res) => {
@@ -182,7 +183,7 @@ export const assignProjectManager = async (req, res) => {
 
     const { projectId, pmId } = req.body;
 
-    const project = await Project.findById(projectId);
+    const project = await AdminProject.findById(projectId); 
     const pm = await User.findById(pmId);
 
     if (!project) {
@@ -207,7 +208,7 @@ export const assignProjectManager = async (req, res) => {
 export const addDeveloper = async (req, res) => {
   try {
 
-    const { name, email, phoneno, city } = req.body;
+    const { name, email, phoneno, department, city } = req.body;
 
     const existing = await User.findOne({ email });
 
@@ -223,6 +224,7 @@ export const addDeveloper = async (req, res) => {
   name,
   email,
   phoneno,
+  department,
   city,
   password: randomPassword,   // ✅ plain password
   role: "developer"
@@ -304,10 +306,35 @@ export const updateDeveloper = async (req, res) => {
 
 };
 // ✅ CREATE PROJECT (ADMIN)
+// export const createProjectByAdmin = async (req, res) => {
+//   try {
+
+//     const project = await Project.findById(req.params.id);
+
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+
+//     if (project.status !== "approved") {
+//       return res.status(400).json({ message: "Project not approved" });
+//     }
+
+//     project.status = "pending";   // ✅ FIXED
+
+//     await project.save();
+
+//     res.json({ message: "Project created", project });
+
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const createProjectByAdmin = async (req, res) => {
   try {
 
     const project = await Project.findById(req.params.id);
+    const { description } = req.body;
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
@@ -317,13 +344,36 @@ export const createProjectByAdmin = async (req, res) => {
       return res.status(400).json({ message: "Project not approved" });
     }
 
-    project.status = "pending";   // ✅ FIXED
+    // ✅ NEW ENTRY CREATE
+    const newProject = new AdminProject({
+      title: project.title,
+      clientId: project.clientId,
+      budget: project.budget,
+      deadline: project.deadline,
+      description: description, // abhi static (next step me form banaenge)
+    });
 
-    await project.save();
+    await newProject.save();
+    project.status = "created";
+await project.save();
 
-    res.json({ message: "Project created", project });
+    res.json({ message: "Admin Project Created" });
 
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getAdminProjects = async (req, res) => {
+  try {
+
+    const projects = await AdminProject.find()
+      .populate("clientId", "name")
+      .populate("assignedPM", "name");
+
+    res.json(projects);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

@@ -27,7 +27,7 @@ function AdminProjects() {
   // ✅ FETCH PROJECTS
   const fetchProjects = async () => {
     const res = await axios.get(
-      "http://localhost:5000/api/admin/projects",
+      "http://localhost:5000/api/admin/admin-projects",
       { headers: { Authorization: `Bearer ${token}` } }
     );
 

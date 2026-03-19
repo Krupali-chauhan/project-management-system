@@ -7,7 +7,8 @@ import { changePassword } from "../controllers/authController.js";
 import {
   assignDeveloperToPM,
   getAllDevelopers,
-  getMyDevelopers
+  getMyDevelopers,
+  removeDeveloperFromPM
 } from "../controllers/authController.js";
 
 
@@ -37,5 +38,6 @@ router.get("/users", async (req, res) => {
 router.get("/developers", protect, getAllDevelopers);
 router.post("/assign-developer", protect, assignDeveloperToPM);
 router.get("/my-developers", protect, getMyDevelopers);
+router.post("/remove-developer", protect, removeDeveloperFromPM);
 
 export default router;
