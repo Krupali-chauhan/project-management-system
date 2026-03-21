@@ -16,15 +16,15 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  Alert,
   IconButton,
-  Divider,
+  Alert,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import EditIcon from "@mui/icons-material/Edit";           // ← New import for pencil
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import PendingIcon from "@mui/icons-material/Pending";
 
 function ViewSOW() {
@@ -36,7 +36,6 @@ function ViewSOW() {
     queryFn: async () => {
       const token = localStorage.getItem("token");
       if (!token) return [];
-
       const res = await axios.get("http://localhost:5000/api/projects/my", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -44,40 +43,22 @@ function ViewSOW() {
     },
   });
 
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "70vh" }}>
-        <CircularProgress size={60} thickness={4} />
-      </Box>
-    );
-  }
-
-  if (isError || !projects) {
-    return (
-      <Alert severity="error" sx={{ mt: 6, mx: "auto", maxWidth: 600, p: 3 }}>
-        Unable to load your SOWs. Please check your connection and try again.
-      </Alert>
-    );
-  }
-
-  const sortedProjects = [...projects].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  if (isLoading) return (
+    <Box sx={{ display: "flex", justifyContent: "center", minHeight: "70vh", alignItems: "center" }}>
+      <CircularProgress />
+    </Box>
   );
 
-  if (sortedProjects.length === 0) {
+  if (isError) return <Alert severity="error" sx={{ m: 4 }}>Failed to load SOWs</Alert>;
+
+  if (projects.length === 0) {
     return (
-      <Box sx={{ mt: "100px", textAlign: "center", px: 4 }}>
-        <DescriptionIcon sx={{ fontSize: 120, color: "grey.300", mb: 3 }} />
-        <Typography variant="h5" gutterBottom color="text.secondary">
-          No SOWs Generated Yet
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 500, mx: "auto" }}>
-          Start by creating a new project requirement. Once generated, your SOWs will appear here.
-        </Typography>
+      <Box sx={{ mt: 10, textAlign: "center" }}>
+        <DescriptionIcon sx={{ fontSize: 100, color: "grey.300", mb: 3 }} />
+        <Typography variant="h5" color="text.secondary">No SOWs yet</Typography>
         <Button
           variant="contained"
-          color="primary"
-          size="large"
+          sx={{ mt: 3 }}
           startIcon={<DescriptionIcon />}
           onClick={() => navigate("/client/create-project")}
         >
@@ -88,100 +69,54 @@ function ViewSOW() {
   }
 
   return (
-    <Box sx={{ mt: "70px", width: "100%" }}>
-      {/* Header */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-        <Typography variant="h4" component="h1" fontWeight="600">
-          My Generated SOWs
-        </Typography>
-        <Chip
-          icon={<DescriptionIcon />}
-          label={`${sortedProjects.length} SOWs`}
-          color="primary"
-          variant="outlined"
-          size="medium"
-        />
-      </Box>
+    <Box sx={{ mt: 8, px: { xs: 2, md: 4 } }}>
+      <Typography variant="h4" gutterBottom>
+        My Generated SOWs
+      </Typography>
 
-      <Divider sx={{ mb: 3 }} />
-
-      <TableContainer
-        component={Paper}
-        elevation={4}
-        sx={{
-          borderRadius: 3,
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-          background: "white",
-        }}
-      >
-        <Table sx={{ minWidth: 650 }} aria-label="SOWs table">
-          <TableHead sx={{ background: "linear-gradient(90deg, #1e88e5 0%, #42a5f5 100%)" }}>
+      <TableContainer component={Paper} sx={{ mt: 3, borderRadius: 2 }}>
+        <Table>
+          <TableHead sx={{ bgcolor: "primary.main" }}>
             <TableRow>
-              <TableCell sx={{ color: "white", fontWeight: "bold", pl: 3 }}>Project Title</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }} align="center">Status</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }} align="center">Deadline</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }} align="right">Budget</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }} align="center">Last Updated</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: "bold" }} align="center">Actions</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Title</TableCell>
+              <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>Status</TableCell>
+              <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>Deadline</TableCell>
+              <TableCell align="right" sx={{ color: "white", fontWeight: "bold" }}>Budget</TableCell>
+              <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
-
           <TableBody>
-            {sortedProjects.map((proj) => (
-              <TableRow
-                key={proj._id}
-                hover
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  transition: "all 0.2s",
-                  "&:hover": { backgroundColor: "#f0f7ff" },
-                }}
-              >
-                <TableCell component="th" scope="row" sx={{ pl: 3, fontWeight: "medium" }}>
-                  {proj.title}
-                </TableCell>
+            {projects.map((proj) => (
+              <TableRow key={proj._id} hover>
+                <TableCell>{proj.title}</TableCell>
 
                 <TableCell align="center">
                   <Chip
-                    icon={
-                      proj.status === "approved" ? <CheckCircleIcon /> :
-                      proj.status === "rejected" ? <WarningAmberIcon /> :
-                      <PendingIcon />
-                    }
                     label={proj.status.toUpperCase()}
                     color={
                       proj.status === "approved" ? "success" :
                       proj.status === "rejected" ? "error" :
                       "warning"
                     }
-                    variant="filled"
-                    size="medium"
-                    sx={{ minWidth: 110, fontWeight: "bold" }}
+                    icon={
+                      proj.status === "approved" ? <CheckCircleIcon /> :
+                      proj.status === "rejected" ? <CancelIcon /> :
+                      <PendingIcon />
+                    }
                   />
                 </TableCell>
 
                 <TableCell align="center">
-                  {new Date(proj.deadline).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {new Date(proj.deadline).toLocaleDateString("en-IN")}
                 </TableCell>
 
-                <TableCell align="right" sx={{ fontWeight: "medium" }}>
+                <TableCell align="right">
                   ₹{Number(proj.budget).toLocaleString("en-IN")}
                 </TableCell>
 
                 <TableCell align="center">
-                  {new Date(proj.updatedAt).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                  })}
-                </TableCell>
-
-                <TableCell align="center">
                   <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+                    {/* Always show View icon */}
                     <Tooltip title="View Full SOW">
                       <IconButton
                         color="primary"
@@ -192,29 +127,41 @@ function ViewSOW() {
                       </IconButton>
                     </Tooltip>
 
+                    {/* For rejected projects: show BOTH Edit (pencil) + Delete */}
                     {proj.status === "rejected" && (
-                      <Tooltip title="Delete Permanently">
-                        <IconButton
-                          color="error"
-                          size="small"
-                          onClick={async () => {
-                            if (window.confirm("Are you sure you want to delete this rejected SOW permanently?")) {
-                              try {
-                                await axios.delete(`http://localhost:5000/api/projects/${proj._id}`, {
-                                  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-                                });
-                                queryClient.invalidateQueries(["my-sows"]);
-                                // Optional: success toast
-                              } catch (err) {
-                                console.error(err);
-                                alert("Error deleting SOW");
+                      <>
+                        <Tooltip title="Edit & Resubmit">
+                          <IconButton
+                            color="secondary"          // orange-ish color for edit
+                            size="small"
+                            onClick={() => navigate(`/client/create-project/${proj._id}`)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title="Delete Permanently">
+                          <IconButton
+                            color="error"
+                            size="small"
+                            onClick={async () => {
+                              if (window.confirm("Delete this rejected SOW permanently? This cannot be undone.")) {
+                                try {
+                                  await axios.delete(`http://localhost:5000/api/projects/${proj._id}`, {
+                                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                                  });
+                                  queryClient.invalidateQueries(["my-sows"]);
+                                  alert("Deleted successfully");
+                                } catch (err) {
+                                  alert("Delete failed: " + (err.response?.data?.message || "Unknown error"));
+                                }
                               }
-                            }
-                          }}
-                        >
-                          <DeleteForeverIcon />
-                        </IconButton>
-                      </Tooltip>
+                            }}
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </>
                     )}
                   </Box>
                 </TableCell>

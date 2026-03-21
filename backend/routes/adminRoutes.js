@@ -37,7 +37,7 @@ router.get("/projects", getAllProjects);
 router.put("/project/approve/:id", approveProject);
 
 router.put("/project/reject/:id", rejectProject);
-router.put("/project/create/:id", protect, createProjectByAdmin);
+router.post("/projects/:id/create-admin", protect, createProjectByAdmin);
 
 // ✅ Assign PM (IMPORTANT)
 router.put("/assign-pm", protect, assignProjectManager);
@@ -50,7 +50,6 @@ router.get("/developer/:id", getSingleDeveloper);
 router.put("/developer/:id", updateDeveloper);
 router.post("/add-developer", protect, addDeveloper);
 router.get("/admin-projects", protect, getAdminProjects);
-
 
 
 export default router;

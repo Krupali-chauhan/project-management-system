@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import Project from "../models/Project.js";
 import AdminProject from "../models/AdminProject.js";
+import mongoose from "mongoose";
 import generateToken from "../utils/generateToken.js";   // optional – agar token bhejna hai to
 
 export const addProjectManager = async (req, res) => {
@@ -70,27 +71,7 @@ export const addProjectManager = async (req, res) => {
   }
 };
 // Get counts for dashboard cards
-export const getDashboardCounts = async (req, res) => {
-  try {
-    const totalUsers = await User.countDocuments();
-    const projectManagers = await User.countDocuments({ role: "projectManager" });
-    const developers = await User.countDocuments({ role: "developer" });
 
-    let totalProjects = 0;
-    // Agar Project model bana hai to yeh uncomment kar dena
-    // const totalProjects = await Project.countDocuments();
-
-    res.json({
-      totalUsers,
-      projectManagers,
-      developers,
-      totalProjects
-    });
-  } catch (error) {
-    console.error("Dashboard count error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
 export const getProjectManagers = async (req, res) => {
 
   const pms = await User.find({ role: "projectManager" });
@@ -180,10 +161,9 @@ export const rejectProject = async (req, res) => {
 // =============================
 export const assignProjectManager = async (req, res) => {
   try {
-
     const { projectId, pmId } = req.body;
 
-    const project = await AdminProject.findById(projectId); 
+    const project = await AdminProject.findById(projectId);
     const pm = await User.findById(pmId);
 
     if (!project) {
@@ -194,14 +174,18 @@ export const assignProjectManager = async (req, res) => {
       return res.status(400).json({ message: "Invalid PM" });
     }
 
-    project.assignedPM = pmId;
+    // ✅ FINAL FIX
+    project.assignedPM = pm._id;   // ← use this instead of new ObjectId
     project.status = "assigned";
 
     await project.save();
 
-    res.json({ message: "PM Assigned Successfully" });
+    console.log("✅ AssignedPM saved:", project.assignedPM);
+
+    res.json({ message: "PM Assigned Successfully", project });
 
   } catch (error) {
+    console.log("❌ Assign Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -330,36 +314,81 @@ export const updateDeveloper = async (req, res) => {
 //   }
 // };
 
+// export const createProjectByAdmin = async (req, res) => {
+//   try {
+
+//     const project = await Project.findById(req.params.id);
+//     const { description } = req.body;
+
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
+
+//     if (project.status !== "approved") {
+//       return res.status(400).json({ message: "Project not approved" });
+//     }
+
+//     // ✅ NEW ENTRY CREATE
+//     const newProject = new AdminProject({
+//       title: project.title,
+//       clientId: project.clientId,
+//       budget: project.budget,
+//       deadline: project.deadline,
+//       description: description, // abhi static (next step me form banaenge)
+//     });
+
+//     await newProject.save();
+//     project.status = "created";
+// await project.save();
+
+//     res.json({ message: "Admin Project Created" });
+
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+// adminController.js
+// adminController.js
 export const createProjectByAdmin = async (req, res) => {
   try {
+    const projectId = req.params.id;
 
-    const project = await Project.findById(req.params.id);
-    const { description } = req.body;
+    const original = await Project.findById(projectId);
+    if (!original) return res.status(404).json({ message: "Project not found" });
 
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
+    if (original.status !== "approved") {
+      return res.status(400).json({ message: "Only approved projects can be created" });
     }
 
-    if (project.status !== "approved") {
-      return res.status(400).json({ message: "Project not approved" });
+    // Duplicate check
+    const alreadyCreated = await AdminProject.findOne({ originalProjectId: projectId });
+    if (alreadyCreated) {
+      return res.status(400).json({ message: "Admin project already exists for this" });
     }
 
-    // ✅ NEW ENTRY CREATE
-    const newProject = new AdminProject({
-      title: project.title,
-      clientId: project.clientId,
-      budget: project.budget,
-      deadline: project.deadline,
-      description: description, // abhi static (next step me form banaenge)
+    const newAdminProj = new AdminProject({
+      title: original.title,
+      clientId: original.clientId,
+      budget: original.budget,
+      deadline: original.deadline,
+      description: original.description || "No description",
+      sow: original.sow,                    // Full SOW copy
+      originalProjectId: projectId,
+      status: "pending_assignment"          // Ready for PM assign
     });
 
-    await newProject.save();
-    project.status = "created";
-await project.save();
+    await newAdminProj.save();
 
-    res.json({ message: "Admin Project Created" });
+    // Optional: original status change
+    original.status = "created_by_admin";
+    await original.save();
 
-  } catch (error) {
+    res.status(201).json({
+      message: "Admin project created from approved SOW",
+      adminProject: newAdminProj
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -375,5 +404,30 @@ export const getAdminProjects = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+// Yeh function async hona chahiye
+// adminController.js
+export const getDashboardCounts = async (req, res) => {
+  try {
+    const totalUsers      = await User.countDocuments();
+    const projectManagers = await User.countDocuments({ role: "projectManager" });
+    const developers      = await User.countDocuments({ role: "developer" });
+
+    let totalProjects = 0;
+    // Agar Project model import hai to real count laga do
+    // try {
+    //   totalProjects = await Project.countDocuments();
+    // } catch(e) { console.log("Project count nahi mila", e); }
+
+    res.json({
+      totalUsers,        // frontend → users
+      projectManagers,   // frontend → managers
+      developers,        // frontend → developers
+      totalProjects      // frontend → projects (abhi 0 rahega agar count nahi laga)
+    });
+  } catch (error) {
+    console.error("Dashboard error:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };

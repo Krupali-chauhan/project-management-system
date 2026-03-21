@@ -31,8 +31,13 @@ import EditDeveloper from "./pages/superAdmin/EditDeveloper";
 import AddDeveloper from "./pages/superAdmin/AddDeveloper";
 import AdminProjects from "./pages/superAdmin/AdminProjects";
 
+
+import PMLayout from "./components/layout/PMLayout";
 import PMDashboard from "./pages/projectManager/PMDashboard";
+import PMProjects from "./pages/projectManager/PMProjects"
+import ManageMilestones from "./pages/projectManager/ManageMilestones";
 import AssignDevelopers from "./pages/projectManager/AssignDevelopers";
+import PMTasks from "./pages/projectManager/PMTasks";
 
 
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
@@ -91,26 +96,15 @@ function App() {
 </Route>
 
         {/* ─── PROJECT MANAGER ─── */}
-        <Route
-          path="/pm/*"
-          element={
-            <>
-              <ClientNavbar />
-              <div style={{ display: "flex" }}>
-                {/* <ProjectManagerSidebar />   agar bana hai to import karo */}
-                <main style={{ flex: 1, padding: "20px" }}>
-                  <Routes>
-                    <Route path="pmdashboard" element={<PMDashboard />} />
-                    <Route path="add-developer" element={<AddDeveloper />} />
-                    <Route path="assign-developers" element={<AssignDevelopers />} />
-                    {/* aur baki PM pages yahan add kar sakte ho */}
-                  </Routes>
-                </main>
-              </div>
-            </>
-          }
-        />
-
+        <Route path="/pm" element={<PMLayout />}>
+  <Route path="pmdashboard" element={<PMDashboard />} />
+  <Route path="pmproject" element={<PMProjects/>}/>
+<Route path="milestones" element={<ManageMilestones />} />
+  <Route path="add-developer" element={<AddDeveloper />} />
+  <Route path="tasks" element={<PMTasks />} />
+  <Route path="assign-developers" element={<AssignDevelopers />} />
+</Route>
+        
         {/* ─── DEVELOPER ─── */}
         <Route
           path="/developer/*"

@@ -9,6 +9,9 @@ import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import projectManagerRoutes from "./routes/projectManagerRoutes.js";
 import pmRoutes from "./routes/projectManagerRoutes.js";
+import milestoneRoutes from "./routes/milestoneRoutes.js";
+import taskRoutes from "./routes/taskRoutes.js";
+
 
 dotenv.config();
 const app = express();
@@ -20,6 +23,9 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/projectmanager", pmRoutes);
+
+app.use("/api/milestones", milestoneRoutes);
+app.use("/api/tasks", taskRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDB Connected"))
