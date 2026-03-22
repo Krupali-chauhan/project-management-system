@@ -24,9 +24,10 @@ const taskSchema = new mongoose.Schema({
   },
 
   status: {
-    type: String,
-    default: "pending"
-  }
+  type: String,
+  enum: ["pending", "in_progress", "completed"], // ✅ ADD
+  default: "pending"
+}
 }, { timestamps: true });
 
 export default mongoose.model("Task", taskSchema);

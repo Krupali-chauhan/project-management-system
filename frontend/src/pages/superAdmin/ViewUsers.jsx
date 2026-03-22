@@ -26,7 +26,7 @@ function ViewUsers() {
 
       <div style={{ display: "flex" }}>
 
-        <SuperadminSidebar />
+    
     <div style={page}>
 <br/>
 <br/>

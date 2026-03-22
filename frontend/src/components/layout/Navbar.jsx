@@ -79,20 +79,6 @@ const goToChangePassword = () => {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
 
-          {/* Notification */}
-
-          <IconButton
-            sx={{
-              color: "white",
-              "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.15)"
-              }
-            }}
-          >
-            <Badge badgeContent={3} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
 
           {/* Avatar */}
 

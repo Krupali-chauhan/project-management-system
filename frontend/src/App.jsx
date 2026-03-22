@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Box } from "@mui/material";
 
 import ClientNavbar from "./components/layout/Navbar";
 import ClientSidebar from "./components/layout/ClientSidebar";
 // import SuperadminSidebar from "./components/layout/SuperadminSidebar";   // ← import karo (naam check kar lena)
 // import ProjectManagerSidebar from "./components/layout/ProjectManagerSidebar"; // agar bana hai to
-// import DeveloperSidebar from "./components/layout/DeveloperSidebar";
+import DeveloperSidebar from "./components/layout/DeveloperSidebar";
 //            // agar bana hai to
 import SuperAdminLayout from "./pages/superAdmin/SuperAdminLayout";
 // Pages
@@ -41,6 +42,7 @@ import PMTasks from "./pages/projectManager/PMTasks";
 
 
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
+import MyTasks from "./pages/developer/MyTasks";
 import ViewDevelopers from "./pages/superAdmin/ViewDeveloper";
 
 function App() {
@@ -106,24 +108,36 @@ function App() {
 </Route>
         
         {/* ─── DEVELOPER ─── */}
-        <Route
-          path="/developer/*"
-          element={
-            <>
-              <ClientNavbar />
-              <div style={{ display: "flex" }}>
-                {/* <DeveloperSidebar />   agar bana hai to */}
-                <main style={{ flex: 1, padding: "20px" }}>
-                  <Routes>
-                    <Route path="developer-dashboard" element={<DeveloperDashboard />} />
-                    {/* aur baki developer pages */}
-                  </Routes>
-                </main>
-              </div>
-            </>
-          }
-        />
+       <Route
+  path="/developer/*"
+  element={
+    <>
+      <ClientNavbar />   {/* ← keep if developers should see same top bar */}
+      
+      <Box sx={{ display: "flex", minHeight: "100vh" }}>
+        <DeveloperSidebar />
+        
+        <Box 
+          component="main" 
+          sx={{ 
+            flexGrow: 1,
+            bgcolor: "#f9fafb",     // light background like your other pages
+            p: { xs: 3, md: 4, lg: 5 }
+          }}
+        >
+          <Routes>
+            <Route path="developer-dashboard" element={<DeveloperDashboard />} />
+            <Route path="mytask" element={<MyTasks />} />
+            {/* Add more developer routes later */}
+            {/* <Route path="projects" element={<DeveloperProjects />} /> */}
+          </Routes>
+        </Box>
+      </Box>
+    </>
+  }
+/>
 
+ 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

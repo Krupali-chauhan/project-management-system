@@ -181,12 +181,7 @@ function ProjectManagerSidebar() {
       text: "Developers",
       icon: <PeopleIcon />,
       path: "/pm/assign-developers",
-    },
-    {
-      text: "Reports",
-      icon: <AssessmentIcon />,
-      path: "/pm/reports", // future ke liye – abhi placeholder
-    },
+    }
   ];
 
   return (

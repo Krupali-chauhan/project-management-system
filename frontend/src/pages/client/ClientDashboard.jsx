@@ -281,7 +281,318 @@
 // }
 
 // export default ClientDashboard;
-import React from "react";
+// import React from "react";
+// import {
+//   Box,
+//   Grid,
+//   Card,
+//   CardContent,
+//   Typography,
+//   Button,
+//   Chip,
+//   Divider
+// } from "@mui/material";
+// import { Link, useNavigate } from "react-router-dom";
+
+// import AddCircleIcon from "@mui/icons-material/AddCircle";
+// import FolderIcon from "@mui/icons-material/Folder";
+// import DescriptionIcon from "@mui/icons-material/Description";
+// import PendingActionsIcon from "@mui/icons-material/PendingActions";
+// import CancelIcon from "@mui/icons-material/Cancel";
+
+// function ClientDashboard() {
+
+//   const navigate = useNavigate();
+
+//   // Demo data (later backend API se aayega)
+//   const totalProjects = 8;
+//   const approvedProjects = 5;
+//   const pendingSOW = 2;
+//   const rejectedProjects = 1;
+
+//   const recentProjects = [
+//     { name: "Ecommerce Website", status: "Approved" },
+//     { name: "Mobile App UI", status: "Pending" },
+//     { name: "Portfolio Website", status: "Rejected" },
+//   ];
+
+//  const cardStyle = {
+// height:150,
+// width:200,
+// borderRadius:"14px",
+// display:"flex",
+// alignItems:"center",
+// justifyContent:"center",
+// textAlign:"center",
+// boxShadow:"0 6px 15px rgba(0,0,0,0.1)",
+// transition:"0.3s",
+
+// "&:hover":{
+// transform:"translateY(-6px)"
+// }
+// };
+//   const numberStyle = {
+//     fontSize: "2.6rem",
+//     fontWeight: "700",
+//     marginBottom: "5px"
+//   };
+
+//   return (
+//     <Box
+//       sx={{
+//         width: "100%",
+//         paddingLeft:3,
+//         mt:2,
+//         paddingTop:5,
+        
+//         background: "#f8fafc",
+//         minHeight: "100vh",
+//         overflowX: "hidden"
+//       }}
+//     >
+
+// {/* ---------------- Welcome Section ---------------- */}
+
+
+
+
+// {/* ---------------- Stats Cards ---------------- */}
+
+// <Grid container spacing={4}>
+
+// {/* Add Requirement */}
+
+// <Grid item xs={12} sm={6} md={3}>
+
+// <Card
+// component={Link}
+// to="/client/create-project"
+// sx={{ ...cardStyle, textDecoration: "none", background:"#eff6ff" }}
+// >
+
+// <CardContent>
+
+// <AddCircleIcon sx={{ fontSize: 45, color:"#2563eb" }} />
+
+// <Typography variant="h6" sx={{ mt:1 }}>
+// Add Requirement
+// </Typography>
+
+// <Button
+// variant="contained"
+// size="small"
+// sx={{ mt:2 }}
+// >
+// Create
+// </Button>
+
+// </CardContent>
+
+// </Card>
+
+// </Grid>
+
+
+// {/* Approved Projects */}
+
+// <Grid item xs={12} sm={6} md={3}>
+
+// <Card component={Link}
+// to="/client/my-projects" sx={{ ...cardStyle,textDecoration: "none", background:"#ecfdf5" }}>
+
+// <CardContent>
+
+// <FolderIcon sx={{ fontSize:45, color:"#10b981" }} />
+
+// <Typography sx={numberStyle}>
+// {approvedProjects}
+// </Typography>
+
+// <Typography>
+// Approved Projects
+// </Typography>
+
+// </CardContent>
+
+// </Card>
+
+// </Grid>
+
+
+// {/* Pending SOW */}
+
+// <Grid item xs={12} sm={6} md={3}>
+
+// <Card sx={{ ...cardStyle, background:"#fef3c7" }}>
+
+// <CardContent>
+
+// <PendingActionsIcon sx={{ fontSize:45, color:"#f59e0b" }} />
+
+// <Typography sx={numberStyle}>
+// {pendingSOW}
+// </Typography>
+
+// <Typography>
+// Pending SOW
+// </Typography>
+
+// </CardContent>
+
+// </Card>
+
+// </Grid>
+
+
+// {/* Rejected Projects */}
+
+// <Grid item xs={12} sm={6} md={3}>
+
+// <Card sx={{ ...cardStyle, background:"#fee2e2" }}>
+
+// <CardContent>
+
+// <CancelIcon sx={{ fontSize:45, color:"#ef4444" }} />
+
+// <Typography sx={numberStyle}>
+// {rejectedProjects}
+// </Typography>
+
+// <Typography>
+// Rejected Projects
+// </Typography>
+
+// </CardContent>
+
+// </Card>
+
+// </Grid>
+
+// </Grid>
+
+
+// {/* ---------------- Quick Actions ---------------- */}
+
+// <Box sx={{ mt:8 }}>
+
+// <Typography variant="h5" fontWeight="bold" gutterBottom>
+// Quick Actions
+// </Typography>
+
+// <Grid container spacing={2}>
+
+// <Grid item>
+
+// <Button
+// variant="contained"
+// onClick={()=>navigate("/client/create-project")}
+// >
+// Create Requirement
+// </Button>
+
+// </Grid>
+
+// <Grid item>
+
+// <Button
+// variant="outlined"
+// onClick={()=>navigate("/client/my-projects")}
+// >
+// View My Projects
+// </Button>
+
+// </Grid>
+
+// <Grid item>
+
+// <Button
+// variant="outlined"
+// onClick={()=>navigate("/client/view-sow")}
+// >
+// View SOW
+// </Button>
+
+// </Grid>
+
+// </Grid>
+
+// </Box>
+
+
+// {/* ---------------- Recent Projects ---------------- */}
+
+// <Box sx={{ mt:8 }}>
+
+// <Typography variant="h5" fontWeight="bold" gutterBottom>
+// Recent Projects
+// </Typography>
+
+// <Card sx={{ borderRadius:3 }}>
+
+// <CardContent>
+
+// {recentProjects.map((project,index)=>(
+// <Box key={index}>
+
+// <Box
+// sx={{
+// display:"flex",
+// justifyContent:"space-between",
+// alignItems:"center",
+// py:1
+// }}
+// >
+
+// <Typography>
+// {project.name}
+// </Typography>
+
+// <Chip
+// label={project.status}
+// color={
+// project.status === "Approved"
+// ? "success"
+// : project.status === "Pending"
+// ? "warning"
+// : "error"
+// }
+// />
+
+// </Box>
+
+// {index !== recentProjects.length-1 && <Divider/>}
+
+// </Box>
+// ))}
+
+// </CardContent>
+
+// </Card>
+
+// </Box>
+
+
+// {/* ---------------- Overview Section ---------------- */}
+
+// <Box sx={{ mt:8, textAlign:"center" }}>
+
+// <Typography variant="h5" fontWeight="bold">
+// Dashboard Overview
+// </Typography>
+
+// <Typography color="text.secondary" sx={{ maxWidth:600, mx:"auto", mt:2 }}>
+// You currently have {approvedProjects} approved projects, {pendingSOW} SOWs waiting for approval and {rejectedProjects} rejected requirements. Use the quick actions above to manage your project workflow efficiently.
+// </Typography>
+
+// </Box>
+
+// </Box>
+// );
+// }
+
+// export default ClientDashboard;
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Box,
   Grid,
@@ -296,43 +607,65 @@ import { Link, useNavigate } from "react-router-dom";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FolderIcon from "@mui/icons-material/Folder";
-import DescriptionIcon from "@mui/icons-material/Description";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 function ClientDashboard() {
 
   const navigate = useNavigate();
 
-  // Demo data (later backend API se aayega)
-  const totalProjects = 8;
-  const approvedProjects = 5;
-  const pendingSOW = 2;
-  const rejectedProjects = 1;
+  // ✅ Dynamic State
+  const [stats, setStats] = useState({
+    totalProjects: 0,
+    approvedProjects: 0,
+    pendingSOW: 0,
+    rejectedProjects: 0
+  });
 
-  const recentProjects = [
-    { name: "Ecommerce Website", status: "Approved" },
-    { name: "Mobile App UI", status: "Pending" },
-    { name: "Portfolio Website", status: "Rejected" },
-  ];
+  const [recentProjects, setRecentProjects] = useState([]);
 
- const cardStyle = {
-height:150,
-width:200,
-borderRadius:"14px",
-display:"flex",
-alignItems:"center",
-justifyContent:"center",
-textAlign:"center",
-boxShadow:"0 6px 15px rgba(0,0,0,0.1)",
-transition:"0.3s",
+  // ✅ API CALL
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
 
-"&:hover":{
-transform:"translateY(-6px)"
-}
-};
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          "http://localhost:5000/api/client/dashboard",
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+
+        setStats(res.data.stats);
+        setRecentProjects(res.data.recentProjects);
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
+
+  const cardStyle = {
+    height: 150,
+    borderRadius: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+    transition: "0.3s",
+    "&:hover": {
+      transform: "translateY(-6px)"
+    }
+  };
+
   const numberStyle = {
-    fontSize: "2.6rem",
+    fontSize: "2.5rem",
     fontWeight: "700",
     marginBottom: "5px"
   };
@@ -341,253 +674,167 @@ transform:"translateY(-6px)"
     <Box
       sx={{
         width: "100%",
-        paddingLeft:3,
-        mt:2,
-        paddingTop:5,
-        
+        p: 4,
         background: "#f8fafc",
         minHeight: "100vh",
-        overflowX: "hidden"
+        mt:5
       }}
     >
 
-{/* ---------------- Welcome Section ---------------- */}
-
-
-
-
-{/* ---------------- Stats Cards ---------------- */}
-
-<Grid container spacing={4}>
-
-{/* Add Requirement */}
-
-<Grid item xs={12} sm={6} md={3}>
-
-<Card
-component={Link}
-to="/client/create-project"
-sx={{ ...cardStyle, textDecoration: "none", background:"#eff6ff" }}
->
-
-<CardContent>
-
-<AddCircleIcon sx={{ fontSize: 45, color:"#2563eb" }} />
-
-<Typography variant="h6" sx={{ mt:1 }}>
-Add Requirement
-</Typography>
-
-<Button
-variant="contained"
-size="small"
-sx={{ mt:2 }}
->
-Create
-</Button>
-
-</CardContent>
-
-</Card>
-
-</Grid>
-
-
-{/* Approved Projects */}
-
-<Grid item xs={12} sm={6} md={3}>
-
-<Card component={Link}
-to="/client/my-projects" sx={{ ...cardStyle,textDecoration: "none", background:"#ecfdf5" }}>
-
-<CardContent>
-
-<FolderIcon sx={{ fontSize:45, color:"#10b981" }} />
-
-<Typography sx={numberStyle}>
-{approvedProjects}
-</Typography>
-
-<Typography>
-Approved Projects
-</Typography>
-
-</CardContent>
-
-</Card>
-
-</Grid>
-
-
-{/* Pending SOW */}
-
-<Grid item xs={12} sm={6} md={3}>
-
-<Card sx={{ ...cardStyle, background:"#fef3c7" }}>
-
-<CardContent>
-
-<PendingActionsIcon sx={{ fontSize:45, color:"#f59e0b" }} />
-
-<Typography sx={numberStyle}>
-{pendingSOW}
-</Typography>
-
-<Typography>
-Pending SOW
-</Typography>
-
-</CardContent>
-
-</Card>
-
-</Grid>
-
-
-{/* Rejected Projects */}
-
-<Grid item xs={12} sm={6} md={3}>
-
-<Card sx={{ ...cardStyle, background:"#fee2e2" }}>
-
-<CardContent>
-
-<CancelIcon sx={{ fontSize:45, color:"#ef4444" }} />
-
-<Typography sx={numberStyle}>
-{rejectedProjects}
-</Typography>
-
-<Typography>
-Rejected Projects
-</Typography>
-
-</CardContent>
-
-</Card>
-
-</Grid>
-
-</Grid>
-
-
-{/* ---------------- Quick Actions ---------------- */}
-
-<Box sx={{ mt:8 }}>
-
-<Typography variant="h5" fontWeight="bold" gutterBottom>
-Quick Actions
-</Typography>
-
-<Grid container spacing={2}>
-
-<Grid item>
-
-<Button
-variant="contained"
-onClick={()=>navigate("/client/create-project")}
->
-Create Requirement
-</Button>
-
-</Grid>
-
-<Grid item>
-
-<Button
-variant="outlined"
-onClick={()=>navigate("/client/my-projects")}
->
-View My Projects
-</Button>
-
-</Grid>
-
-<Grid item>
-
-<Button
-variant="outlined"
-onClick={()=>navigate("/client/view-sow")}
->
-View SOW
-</Button>
-
-</Grid>
-
-</Grid>
-
-</Box>
-
-
-{/* ---------------- Recent Projects ---------------- */}
-
-<Box sx={{ mt:8 }}>
-
-<Typography variant="h5" fontWeight="bold" gutterBottom>
-Recent Projects
-</Typography>
-
-<Card sx={{ borderRadius:3 }}>
-
-<CardContent>
-
-{recentProjects.map((project,index)=>(
-<Box key={index}>
-
-<Box
-sx={{
-display:"flex",
-justifyContent:"space-between",
-alignItems:"center",
-py:1
-}}
->
-
-<Typography>
-{project.name}
-</Typography>
-
-<Chip
-label={project.status}
-color={
-project.status === "Approved"
-? "success"
-: project.status === "Pending"
-? "warning"
-: "error"
-}
-/>
-
-</Box>
-
-{index !== recentProjects.length-1 && <Divider/>}
-
-</Box>
-))}
-
-</CardContent>
-
-</Card>
-
-</Box>
-
-
-{/* ---------------- Overview Section ---------------- */}
-
-<Box sx={{ mt:8, textAlign:"center" }}>
-
-<Typography variant="h5" fontWeight="bold">
-Dashboard Overview
-</Typography>
-
-<Typography color="text.secondary" sx={{ maxWidth:600, mx:"auto", mt:2 }}>
-You currently have {approvedProjects} approved projects, {pendingSOW} SOWs waiting for approval and {rejectedProjects} rejected requirements. Use the quick actions above to manage your project workflow efficiently.
-</Typography>
-
-</Box>
-
-</Box>
-);
+      {/* 🔥 Stats Cards */}
+      <Grid container spacing={3}>
+
+        {/* Add Requirement */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Card
+            component={Link}
+            to="/client/create-project"
+            sx={{ ...cardStyle, textDecoration: "none", background:"#eff6ff" }}
+          >
+            <CardContent>
+              <AddCircleIcon sx={{ fontSize: 45, color:"#2563eb" }} />
+              <Typography variant="h6" mt={1}>
+                Add Requirement
+              </Typography>
+              <Button variant="contained" size="small" sx={{ mt:2 }}>
+                Create
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Total Projects */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ ...cardStyle, background:"#e0f2fe" }}>
+            <CardContent>
+              <DescriptionIcon sx={{ fontSize:45, color:"#0284c7" }} />
+              <Typography sx={numberStyle}>
+                {stats.totalProjects}
+              </Typography>
+              <Typography>Total Projects</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Approved */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ ...cardStyle, background:"#ecfdf5" }}>
+            <CardContent>
+              <FolderIcon sx={{ fontSize:45, color:"#10b981" }} />
+              <Typography sx={numberStyle}>
+                {stats.approvedProjects}
+              </Typography>
+              <Typography>Approved Projects</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Pending */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ ...cardStyle, background:"#fef3c7" }}>
+            <CardContent>
+              <PendingActionsIcon sx={{ fontSize:45, color:"#f59e0b" }} />
+              <Typography sx={numberStyle}>
+                {stats.pendingSOW}
+              </Typography>
+              <Typography>Pending SOW</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Rejected */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Card sx={{ ...cardStyle, background:"#fee2e2" }}>
+            <CardContent>
+              <CancelIcon sx={{ fontSize:45, color:"#ef4444" }} />
+              <Typography sx={numberStyle}>
+                {stats.rejectedProjects}
+              </Typography>
+              <Typography>Rejected</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+      </Grid>
+
+      {/* 🔥 Quick Actions */}
+      <Box mt={6}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Quick Actions
+        </Typography>
+
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button variant="contained" onClick={()=>navigate("/client/create-project")}>
+              Create Requirement
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <Button variant="outlined" onClick={()=>navigate("/client/my-projects")}>
+              View My Projects
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <Button variant="outlined" onClick={()=>navigate("/client/view-sow")}>
+              View SOW
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* 🔥 Recent Projects */}
+      <Box mt={6}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Recent Projects
+        </Typography>
+
+        <Card sx={{ borderRadius:3 }}>
+          <CardContent>
+
+            {recentProjects.length === 0 ? (
+              <Typography>No Projects Found</Typography>
+            ) : (
+              recentProjects.map((p,index)=>(
+                <Box key={p._id}>
+                  <Box sx={{ display:"flex", justifyContent:"space-between", py:1 }}>
+                    <Typography>{p.title}</Typography>
+
+                    <Chip
+                      label={p.status}
+                      color={
+                        p.status === "approved"
+                          ? "success"
+                          : p.status === "pending"
+                          ? "warning"
+                          : "error"
+                      }
+                    />
+                  </Box>
+
+                  {index !== recentProjects.length-1 && <Divider/>}
+                </Box>
+              ))
+            )}
+
+          </CardContent>
+        </Card>
+      </Box>
+
+      {/* 🔥 Overview */}
+      <Box mt={6} textAlign="center">
+        <Typography variant="h5" fontWeight="bold">
+          Dashboard Overview
+        </Typography>
+
+        <Typography color="text.secondary" sx={{ maxWidth:600, mx:"auto", mt:2 }}>
+          You have {stats.approvedProjects} approved projects, {stats.pendingSOW} pending SOW and {stats.rejectedProjects} rejected projects.
+        </Typography>
+      </Box>
+
+    </Box>
+  );
 }
 
 export default ClientDashboard;

@@ -1,29 +1,40 @@
 import Project from "../models/Project.js";
 import AdminProject from "../models/AdminProject.js";
 import mongoose from "mongoose";
+import User from "../models/User.js";
+import Task from "../models/Task.js";
 
 export const getPMDashboard = async (req, res) => {
   try {
-    const pmId = req.user._id;
+    const pmId = new mongoose.Types.ObjectId(req.user.id);
 
-    // ✅ FIX: AdminProject use karo
     const projects = await AdminProject.find({ assignedPM: pmId });
 
-    const totalProjects = projects.length;
+    const developers = await User.countDocuments({ role: "developer" });
+
+    const tasks = await Task.countDocuments({
+      projectManager: pmId
+    });
+
+     const pendingTasks = await Task.countDocuments({
+      projectManager: pmId,
+      status: "pending"
+    });
+
 
     res.json({
       stats: {
-        projects: totalProjects,
-        developers: 0,
-        tasks: 0,
-        pendingTasks: 0
+        projects: projects.length,
+        developers,
+        tasks,
+        pendingTasks
       },
       projects
     });
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error" });
+  } catch (err) {
+    console.log("PM Dashboard Error:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 };
 // projectManagerController.js
