@@ -19,6 +19,7 @@ import CreateProject from "./pages/client/CreateProject";
 import MyProjects from "./pages/client/MyProjects";
 import ViewSOW from "./pages/client/ViewSOW";
 import SOWDetail from "./pages/client/SOWDetail";
+import ProjectProgress from "./pages/client/ProjectProgress";
 
 import SuperAdminDashboard from "./pages/superAdmin/SuperAdminDashboard";
 import AddProjectManager from "./pages/superAdmin/AddProjectManager";
@@ -39,6 +40,7 @@ import PMProjects from "./pages/projectManager/PMProjects"
 import ManageMilestones from "./pages/projectManager/ManageMilestones";
 import AssignDevelopers from "./pages/projectManager/AssignDevelopers";
 import PMTasks from "./pages/projectManager/PMTasks";
+import PMProjectProgress from "./pages/projectManager/PMProjectProgress";
 
 
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
@@ -72,6 +74,7 @@ function App() {
                     <Route path="my-projects" element={<MyProjects />} />
                     <Route path="view-sow" element={<ViewSOW />} />
                     <Route path="sow-detail/:id" element={<SOWDetail />} />
+                    <Route path="project-progress/:projectId" element={<ProjectProgress />} />
                   </Routes>
                 </main>
               </div>
@@ -104,6 +107,7 @@ function App() {
 <Route path="milestones" element={<ManageMilestones />} />
   <Route path="add-developer" element={<AddDeveloper />} />
   <Route path="tasks" element={<PMTasks />} />
+  <Route path="/pm/project-progress" element={<PMProjectProgress />} />
   <Route path="assign-developers" element={<AssignDevelopers />} />
 </Route>
         

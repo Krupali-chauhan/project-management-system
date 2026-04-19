@@ -27,6 +27,9 @@ const taskSchema = new mongoose.Schema({
   type: String,
   enum: ["pending", "in_progress", "completed"], // ✅ ADD
   default: "pending"
+},
+order: {
+  type: Number
 }
 }, { timestamps: true });
 

@@ -431,3 +431,32 @@ export const getDashboardCounts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getProjectProgress = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    const project = await AdminProject.findOne({
+      originalProjectId: new mongoose.Types.ObjectId(projectId), // 🔥 FIX
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Progress not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: project,
+    });
+
+  } catch (error) {
+    console.error("ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};

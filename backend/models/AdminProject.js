@@ -45,6 +45,11 @@ const adminProjectSchema = new mongoose.Schema({
     type: String,
     enum: ["pending_assignment", "assigned", "in_progress"],
     default: "pending_assignment"
+  },
+
+  progress: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

@@ -87,6 +87,43 @@ function MyTasks() {
     return "Pending ⏳";
   };
 
+  const sortedTasks = [...tasks].sort((a, b) => {
+  if (a.projectId?._id !== b.projectId?._id) {
+    return a.projectId?._id.localeCompare(b.projectId?._id);
+  }
+  return a.order - b.order;
+});
+
+// const isPreviousCompleted = (task) => {
+//   const projectTasks = sortedTasks.filter(
+//     t => t.projectId?._id === task.projectId?._id
+//   );
+
+//   const currentIndex = projectTasks.findIndex(
+//     t => t._id === task._id
+//   );
+
+//   if (currentIndex === 0) return true;
+
+//   return projectTasks[currentIndex - 1].status === "completed";
+// };
+const isPreviousCompleted = (task) => {
+  if (!task) return false; // safety
+
+  const projectTasks = sortedTasks.filter(
+    t => t.projectId?._id === task.projectId?._id
+  );
+
+  const currentIndex = projectTasks.findIndex(
+    t => t._id === task._id
+  );
+
+  if (currentIndex === 0) return true;
+
+  const prevTask = projectTasks[currentIndex - 1];
+
+  return prevTask?.status === "completed"; // ✅ FIX
+};
   return (
     <Box sx={{ p: 4, background: "#f8fafc", minHeight: "100vh" }}>
 
@@ -99,7 +136,7 @@ function MyTasks() {
         {tasks.length === 0 ? (
           <Typography>No Tasks Assigned</Typography>
         ) : (
-          tasks.map((task) => (
+         sortedTasks.map((task) => (
 
             <Grid item xs={12} md={6} lg={4} key={task._id}>
 
@@ -238,7 +275,13 @@ function MyTasks() {
 
         <DialogActions>
 
-          {selectedTask?.status === "pending" && (
+  {selectedTask && !isPreviousCompleted(selectedTask) && (
+  <Typography color="error" fontSize={12}>
+    ⚠️ Complete previous task first
+  </Typography>
+)}
+
+          {/* {selectedTask?.status === "pending" && (
             <Button
               variant="contained"
               onClick={() =>
@@ -247,9 +290,20 @@ function MyTasks() {
             >
               Start
             </Button>
-          )}
+          )} */}
+          {selectedTask?.status === "pending" && (
+  <Button
+    variant="contained"
+    disabled={!isPreviousCompleted(selectedTask)}
+    onClick={() =>
+      updateStatus(selectedTask._id, "in_progress")
+    }
+  >
+    Start
+  </Button>
+)}
 
-          {selectedTask?.status !== "completed" && (
+          {/* {selectedTask?.status !== "completed" && (
             <Button
               variant="outlined"
               onClick={() =>
@@ -258,7 +312,17 @@ function MyTasks() {
             >
               Complete
             </Button>
-          )}
+          )} */}
+          {selectedTask?.status === "in_progress" && (
+  <Button
+    variant="outlined"
+    onClick={() =>
+      updateStatus(selectedTask._id, "completed")
+    }
+  >
+    Complete
+  </Button>
+)}
 
           <Button onClick={handleClose}>
             Close

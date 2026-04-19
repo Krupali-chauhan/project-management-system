@@ -149,6 +149,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import PeopleIcon from "@mui/icons-material/People";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LogoutIcon from "@mui/icons-material/Logout";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 const drawerWidth = 240;
 
@@ -181,6 +182,11 @@ function ProjectManagerSidebar() {
       text: "Developers",
       icon: <PeopleIcon />,
       path: "/pm/assign-developers",
+    },
+    {
+      text: "Project Progress",
+      icon: <TrendingUpIcon />,
+      path: "/pm/project-progress",
     }
   ];
 

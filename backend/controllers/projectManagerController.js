@@ -20,7 +20,49 @@ export const getPMDashboard = async (req, res) => {
       projectManager: pmId,
       status: "pending"
     });
+//jkajhkahfk
+const updatedProjects = await Promise.all(
+      projects.map(async (project) => {
+        const projectTasks = await Task.find({
+          projectId: project._id
+        });
 
+        const totalTasks = projectTasks.length;
+
+        const completedTasks = projectTasks.filter((task) => {
+          const status = String(task.status || "")
+            .trim()
+            .toLowerCase();
+
+          return status === "completed";
+        }).length;
+
+        let progress = 0;
+
+        if (totalTasks > 0) {
+          progress = Math.round(
+            (completedTasks / totalTasks) * 100
+          );
+        }
+
+        project.progress = progress;
+
+        if (progress === 100) {
+          project.status = "completed";
+        } else if (progress > 0) {
+          project.status = "in_progress";
+        }
+
+        await project.save();
+
+        return {
+          ...project.toObject(),
+          tasks: projectTasks,
+          progress: progress
+        };
+      })
+    );
+//hjbsbvjsbv
 
     res.json({
       stats: {

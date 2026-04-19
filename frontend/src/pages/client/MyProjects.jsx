@@ -778,7 +778,7 @@ function MyProjects() {
                       variant="contained"
                       size="small"
                       color="primary"
-                      onClick={() => navigate(`/client/project-detail/${proj._id}`)}
+                      onClick={() => navigate(`/client/project-progress/${proj._id}`)}
                     >
                       View Project
                     </Button>
